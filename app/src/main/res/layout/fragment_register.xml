@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".fragments.RegisterFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:backgroundTint="#F4F4F4">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:fontFamily="sans-serif"
+            android:text="@string/Register"
+            android:textColor="@color/font"
+            android:textSize="34sp"
+            app:layout_constraintBottom_toTopOf="@+id/loginInput"
+            app:layout_constraintEnd_toEndOf="@+id/nameInput"
+            app:layout_constraintStart_toStartOf="@+id/nameInput" />
+
+        <Button
+            android:id="@+id/confirmRegisterButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/button1"
+            android:text="@string/Create_account"
+            android:textColor="@color/white"
+            app:cornerRadius="5dp"
+            app:layout_constraintEnd_toEndOf="@+id/surnameInput"
+            app:layout_constraintStart_toStartOf="@+id/surnameInput"
+            app:layout_constraintTop_toBottomOf="@+id/passwordInput" />
+
+        <EditText
+            android:id="@+id/surnameInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:hint="@string/Hint_surname"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="@+id/nameInput"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/nameInput"
+            app:layout_constraintTop_toBottomOf="@+id/nameInput"
+            android:autofillHints="" />
+
+        <EditText
+            android:id="@+id/nameInput"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/Hint_firstname"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.411"
+            android:autofillHints="" />
+
+        <EditText
+            android:id="@+id/passwordInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:hint="@string/Hint_password"
+            android:inputType="textPassword"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="@+id/nameInput"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/nameInput"
+            app:layout_constraintTop_toBottomOf="@+id/surnameInput"
+            android:autofillHints="" />
+
+        <EditText
+            android:id="@+id/loginInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:ems="10"
+            android:hint="@string/Hint_login"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            app:layout_constraintBottom_toTopOf="@+id/nameInput"
+            app:layout_constraintEnd_toEndOf="@+id/nameInput"
+            app:layout_constraintHorizontal_bias="0.502"
+            app:layout_constraintStart_toStartOf="@+id/nameInput"
+            android:autofillHints="" />
+
+        <TextView
+            android:id="@+id/toLoginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="64dp"
+            android:text="@string/Authorize"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/confirmRegisterButton" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

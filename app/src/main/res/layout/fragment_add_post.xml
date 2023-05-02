@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.AddPostFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="821dp">
+
+                <EditText
+                    android:id="@+id/titleInput"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="44dp"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:hint="@string/Hint_title"
+                    android:inputType="textPersonName"
+                    android:minHeight="48dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/shortDescriptionInput"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="28dp"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:hint="@string/Hint_short_description"
+                    android:inputType="textMultiLine"
+                    android:maxLines="5"
+                    android:minLines="1"
+                    app:layout_constraintEnd_toEndOf="@+id/titleInput"
+                    app:layout_constraintStart_toStartOf="@+id/titleInput"
+                    app:layout_constraintTop_toBottomOf="@+id/titleInput" />
+
+                <EditText
+                    android:id="@+id/fullDescriptionInput"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="28dp"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:hint="@string/Hint_full_description"
+                    android:inputType="textMultiLine"
+                    android:maxLines="15"
+                    android:minLines="1"
+                    app:layout_constraintEnd_toEndOf="@+id/shortDescriptionInput"
+                    app:layout_constraintHeight_max="wrap"
+                    app:layout_constraintHeight_min="wrap"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="@+id/shortDescriptionInput"
+                    app:layout_constraintTop_toBottomOf="@+id/shortDescriptionInput" />
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="300dp"
+                    android:background="#000000"
+                    app:layout_constraintEnd_toEndOf="@+id/fullDescriptionInput"
+                    app:layout_constraintStart_toStartOf="@+id/fullDescriptionInput"
+                    app:layout_constraintTop_toBottomOf="@+id/tagsHorizontalScroll">
+
+                    <VideoView
+                        android:id="@+id/videoView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true" />
+
+                    <ImageView
+                        android:id="@+id/playButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/baseline_play_arrow_24" />
+
+                    <SeekBar
+                        android:id="@+id/seekBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:progressBackgroundTint="#FFFFFF" />
+
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/uploadPostButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/Post"
+                    app:layout_constraintEnd_toEndOf="@+id/add_deleteVideoButton"
+                    app:layout_constraintStart_toStartOf="@+id/add_deleteVideoButton"
+                    app:layout_constraintTop_toBottomOf="@+id/add_deleteVideoButton" />
+
+                <TextView
+                    android:id="@+id/add_deleteVideoButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="40dp"
+                    android:text="@string/Add_video"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
+
+                <SearchView
+                    android:id="@+id/searchView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="@+id/fullDescriptionInput"
+                    app:layout_constraintStart_toStartOf="@+id/fullDescriptionInput"
+                    app:layout_constraintTop_toBottomOf="@+id/fullDescriptionInput" />
+
+                <HorizontalScrollView
+                    android:id="@+id/tagsHorizontalScroll"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    app:layout_constraintEnd_toEndOf="@+id/fullDescriptionInput"
+                    app:layout_constraintStart_toStartOf="@+id/fullDescriptionInput"
+                    app:layout_constraintTop_toBottomOf="@+id/searchView">
+
+                    <LinearLayout
+                        android:id="@+id/tagsLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal" />
+                </HorizontalScrollView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

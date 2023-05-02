@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">InvestUp</string>
+    <string name="Enter">Войти</string>
+    <string name="To_register">РЕГИСТРАЦИЯ</string>
+    <string name="Authorize">АВТОРИЗАЦИЯ</string>
+    <string name="To_authorize">К авторизации</string>
+    <string name="Register">Регистрация</string>
+    <string name="Create_account">Создать аккаунт</string>
+    <string name="Hint_password">Пароль</string>
+    <string name="Hint_firstname">Имя</string>
+    <string name="Hint_surname">Фамилия</string>
+    <string name="Hint_login">Логин</string>
+    <string name="Hint_old_password">Старый пароль</string>
+    <string name="Hint_new_password">Новый пароль</string>
+    <string name="Hint_repeat_password">Повторение пароля</string>
+    <string name="Change_password">Сменить пароль</string>
+    <string name="Change_data">Сменить данные</string>
+    <string name="Hint_title">Название</string>
+    <string name="Hint_short_description">Короткое описание</string>
+    <string name="Hint_full_description">Описание идеи</string>
+    <string name="Delete_video">УДАЛИТЬ ВИДЕО</string>
+    <string name="Add_video">ЗАГРУЗИТЬ ВИДЕО</string>
+    <string name="Post">Опубликовать</string>
+
+    <string name="Add">Добавить</string>
+    <string name="Your_post">Ваши посты</string>
+    <string name="Exit_from_acc">Выйти с аккаунта</string>
+    <string name="Creating_post">Создание поста</string>
+    <string name="Home">Главная</string>
+    <string name="Chat">Чат</string>
+    <string name="Favorite">Избранное</string>
+    <string name="Profile">Аккаунт</string>
+    <string name="Edit_profile">Изменение профиля</string>
+    <string name="Save">Сохранить</string>
+
+    <string name="Toast_saved_data">Данные сохранены</string>
+    <string name="Toast_saved_password">Пароль обновлен</string>
+    <string name="Toast_unexpected_error">Неизвестная ошибка</string>
+
+
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
