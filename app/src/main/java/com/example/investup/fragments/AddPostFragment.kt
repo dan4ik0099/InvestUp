@@ -17,35 +17,44 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import com.example.investup.R
 import com.example.investup.UriHelper
+import com.example.investup.adapter.TagAdapter
 import com.example.investup.dataModels.DataModelAddPost
 import com.example.investup.dataModels.DataModelToken
 import com.example.investup.databinding.FragmentAddPostBinding
-import com.example.investup.databinding.FragmentLoginBinding
-import com.example.investup.databinding.FragmentRegisterBinding
 import com.example.investup.publicObject.ApiInstance
+import com.example.investup.retrofit.dataClass.Tag
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.NonCancellable.start
 import kotlinx.coroutines.launch
+import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 
-class AddPostFragment : Fragment() {
+class AddPostFragment : Fragment(), TagAdapter.Listener {
     lateinit var binding: FragmentAddPostBinding
     private val dataModelAddPost: DataModelAddPost by activityViewModels()
+    private val dataModelToken: DataModelToken by activityViewModels()
     var launcher: ActivityResultLauncher<Intent>? = null
     private var havePermission = false
+    private var allTags = ArrayList<Tag>()
+    private var activeTags = ArrayList<Tag>()
+
     private var isDragging = false
-    private lateinit var filePart: MultipartBody.Part
+    private val adapter = TagAdapter(this)
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,6 +67,31 @@ class AddPostFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
+
+
+            tagsRcView.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
+            tagsRcView.adapter = adapter
+
+
+            val loadTags = CoroutineScope(Dispatchers.IO)
+            loadTags.launch {
+                val response =
+                    ApiInstance.getApi().requestTags("Bearer ${dataModelToken.accessToken.value}")
+                allTags = response.body()!!
+
+
+
+                println("cuja " + response.message())
+                allTags?.let {
+                    requireActivity().runOnUiThread {
+                        adapter.addTags(it)
+                    }
+                }
+
+            }
+
+
+
 
             titleInput.setText(dataModelAddPost.title.value)
             shortDescriptionInput.setText(dataModelAddPost.shortDescription.value)
@@ -83,9 +117,6 @@ class AddPostFragment : Fragment() {
                         playButton.visibility = View.INVISIBLE
                         relativeLayout.visibility = View.VISIBLE
                         addDeleteVideoButton.setText(R.string.Delete_video)
-                        println("data " + res?.data)
-                        filePart =
-                            buildMultipart(res?.data!!, requireContext(), "video/mp4", "video")
                     }
                 }
 
@@ -247,6 +278,66 @@ class AddPostFragment : Fragment() {
 
             }
 
+            uploadPostButton.setOnClickListener {
+                if (true) {
+
+
+                    val title =
+                        dataModelAddPost.title.value?.toRequestBody("text/plain".toMediaTypeOrNull())
+                    val description =
+                        dataModelAddPost.fullDescription.value?.toRequestBody("text/plain".toMediaTypeOrNull())
+                    val shortDescription =
+                        dataModelAddPost.shortDescription.value?.toRequestBody("text/plain".toMediaTypeOrNull())
+
+                    val text = ArrayList<String>()
+                    text.add("6442dbdca63dcfbd0f9e644a")
+
+                    var helper = UriHelper.URIPathHelper()
+
+                    val videoFile = File(
+                        helper.getPath(requireContext(), dataModelAddPost.video.value!!)
+                    )
+
+
+                    val tags = ArrayList<String>()
+
+                    activeTags.mapTo(tags){
+                        it.id
+                    }
+                    val json = Gson().toJson(tags)
+                    val requestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
+
+
+                    val videoRequestBody =
+                        videoFile?.asRequestBody("video/mp4".toMediaTypeOrNull())
+                    val video = MultipartBody.Part.createFormData(
+                        "video",
+                        videoFile.name,
+                        videoRequestBody!!
+                    )
+                    println(videoFile.name)
+
+                    val uploadPostJob = CoroutineScope(Dispatchers.IO)
+                    uploadPostJob.launch {
+                        val response = ApiInstance.getApi().uploadPost(
+                            "Bearer ${dataModelToken.accessToken.value}",
+                            title!!,
+                            description!!,
+                            shortDescription!!,
+                            requestBody,
+                            video
+                        )
+                        println("resp " + response)
+                        val body = response.body()
+                        body?.let {
+                            println("gg " + response.message())
+                        }
+                    }
+
+
+                }
+            }
+
         }
 
     }
@@ -270,5 +361,11 @@ class AddPostFragment : Fragment() {
 
         @JvmStatic
         fun newInstance() = AddPostFragment()
+    }
+
+    override fun onClickTag(tag: Tag) {
+        if (activeTags.contains(tag)) activeTags.remove(tag)
+        else activeTags.add(tag)
+
     }
 }

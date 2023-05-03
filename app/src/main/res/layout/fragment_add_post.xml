@@ -13,11 +13,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="821dp">
+                android:layout_height="match_parent">
 
                 <EditText
                     android:id="@+id/titleInput"
@@ -72,10 +72,11 @@
                     android:id="@+id/relativeLayout"
                     android:layout_width="0dp"
                     android:layout_height="300dp"
+                    android:layout_marginTop="16dp"
                     android:background="#000000"
-                    app:layout_constraintEnd_toEndOf="@+id/fullDescriptionInput"
-                    app:layout_constraintStart_toStartOf="@+id/fullDescriptionInput"
-                    app:layout_constraintTop_toBottomOf="@+id/tagsHorizontalScroll">
+                    app:layout_constraintEnd_toEndOf="@+id/tagsRcView"
+                    app:layout_constraintStart_toStartOf="@+id/tagsRcView"
+                    app:layout_constraintTop_toBottomOf="@+id/tagsRcView">
 
                     <VideoView
                         android:id="@+id/videoView"
@@ -131,22 +132,18 @@
                     android:layout_marginTop="8dp"
                     app:layout_constraintEnd_toEndOf="@+id/fullDescriptionInput"
                     app:layout_constraintStart_toStartOf="@+id/fullDescriptionInput"
-                    app:layout_constraintTop_toBottomOf="@+id/fullDescriptionInput" />
+                    app:layout_constraintTop_toBottomOf="@+id/fullDescriptionInput">
 
-                <HorizontalScrollView
-                    android:id="@+id/tagsHorizontalScroll"
+                </SearchView>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/tagsRcView"
                     android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    app:layout_constraintEnd_toEndOf="@+id/fullDescriptionInput"
-                    app:layout_constraintStart_toStartOf="@+id/fullDescriptionInput"
-                    app:layout_constraintTop_toBottomOf="@+id/searchView">
-
-                    <LinearLayout
-                        android:id="@+id/tagsLayout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal" />
-                </HorizontalScrollView>
+                    android:layout_height="wrap_content"
+                    android:padding="3dp"
+                    app:layout_constraintEnd_toEndOf="@+id/searchView"
+                    app:layout_constraintStart_toStartOf="@+id/searchView"
+                    app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,13 +1,14 @@
 package com.example.investup.publicObject
 
 import com.example.investup.retrofit.UserApi
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiInstance {
-    val loggingInterceptor = HttpLoggingInterceptor().apply {
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
@@ -17,8 +18,11 @@ object ApiInstance {
     private val retrofit = Retrofit.Builder()
         .baseUrl("http://45.9.43.5:5000/")
         .addConverterFactory(GsonConverterFactory.create())
-
+        .client(okHttpClient)
         .build()
+
+
+
     private val userApi = retrofit.create(UserApi::class.java)
     fun getApi(): UserApi {
         return userApi

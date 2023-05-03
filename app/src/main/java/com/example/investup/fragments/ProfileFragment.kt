@@ -43,7 +43,7 @@ class ProfileFragment : Fragment() {
 
                 message?.apply {
 
-                    requireActivity().runOnUiThread {
+                    activity?.runOnUiThread {
 
 
                         nameSurNameText.text = ("${firstName} ${lastName}")

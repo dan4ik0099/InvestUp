@@ -7,6 +7,7 @@ import com.example.investup.retrofit.requestModel.UserChangeNameRequest
 import com.example.investup.retrofit.requestModel.UserChangePasswordRequest
 import com.example.investup.retrofit.requestModel.UserRegisterRequest
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
@@ -24,8 +25,15 @@ interface UserApi {
     suspend fun requestInfoMe(@Header("Authorization") accessToken: String): Response<User>
 
     @Headers("Content-Type: application/json")
+    @GET("/posts")
+    suspend fun requestAllPosts(@Header("Authorization") accessToken: String): Response<ArrayList<Post>>
+
+
+
+
+    @Headers("Content-Type: application/json")
     @GET("tags")
-    suspend fun requestTags(@Header("Authorization") accessToken: String): Response<List<Tag>>
+    suspend fun requestTags(@Header("Authorization") accessToken: String): Response<ArrayList<Tag>>
 
     @Headers("Content-Type: application/json")
     @POST("/users/change/info")
@@ -38,12 +46,23 @@ interface UserApi {
     suspend fun requestChangePassword(
         @Header("Authorization") accessToken: String,
         @Body userChangeNameRequest: UserChangePasswordRequest
-    ) : Response<Void>
+    ) : Response<RequestBody>
 
     @Multipart
     @POST("/users/avatar")
     suspend fun uploadFile(@Header("Authorization") accessToken: String,
         @Part photo: MultipartBody.Part
     ): Response<ResponseBody>
+
+    @Multipart
+    @POST("/posts/create")
+    suspend fun uploadPost(@Header("Authorization") accessToken: String,
+                           @Part("title") title: RequestBody,
+                           @Part("description") description: RequestBody,
+                           @Part("shortDescription") shortDescription: RequestBody,
+                           @Part("tags") tags: RequestBody,
+                           @Part video: MultipartBody.Part?): Response<ResponseBody>
+
+
 }
 
