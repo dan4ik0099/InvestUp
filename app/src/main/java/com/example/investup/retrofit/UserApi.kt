@@ -28,6 +28,13 @@ interface UserApi {
     @GET("/posts")
     suspend fun requestAllPosts(@Header("Authorization") accessToken: String): Response<ArrayList<Post>>
 
+    @Headers("Content-Type: application/json")
+    @GET("/posts/me")
+    suspend fun requestMyPosts(@Header("Authorization") accessToken: String): Response<ArrayList<Post>>
+    @Headers("Content-Type: application/json")
+    @GET("/posts/{id}")
+    suspend fun requestPostById(@Path("id") id :String,  @Header("Authorization") accessToken: String): Response<Post>
+
 
 
 

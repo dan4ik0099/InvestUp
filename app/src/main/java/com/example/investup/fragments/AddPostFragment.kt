@@ -28,6 +28,7 @@ import com.example.investup.adapter.TagAdapter
 import com.example.investup.dataModels.DataModelAddPost
 import com.example.investup.dataModels.DataModelToken
 import com.example.investup.databinding.FragmentAddPostBinding
+import com.example.investup.navigationInterface.navigator
 import com.example.investup.publicObject.ApiInstance
 import com.example.investup.retrofit.dataClass.Tag
 import com.google.gson.Gson
@@ -336,6 +337,7 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
 
 
                 }
+                navigator().navToProfile()
             }
 
         }

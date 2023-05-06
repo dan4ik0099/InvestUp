@@ -32,7 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:backgroundTint="@color/button1"
+            android:backgroundTint="@color/theme"
             android:text="@string/Create_account"
             android:textColor="@color/white"
             app:cornerRadius="5dp"

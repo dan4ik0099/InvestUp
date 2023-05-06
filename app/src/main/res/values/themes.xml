@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.InvestUp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/button1</item>
-        <item name="colorPrimaryVariant">@color/button1</item>
+        <item name="colorPrimary">@color/theme</item>
+        <item name="colorPrimaryVariant">@color/theme</item>
         <item name="titleTextColor">@color/black</item>
 
         <!-- Secondary brand color. -->

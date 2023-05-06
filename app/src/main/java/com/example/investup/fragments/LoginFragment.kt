@@ -62,7 +62,7 @@ class LoginFragment : Fragment() {
 
                             dataModelToken.accessToken.value = accessToken
                             dataModelToken.refreshToken.value = refreshToken
-                            navigator().navToHome()
+
                             navigator().navOn()
                             navigator().navAfterLoginRegister()
                         }

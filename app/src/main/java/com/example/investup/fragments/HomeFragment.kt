@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.investup.R
 import com.example.investup.adapter.PostAdapter
+import com.example.investup.dataModels.DataModeLPost
 import com.example.investup.dataModels.DataModelToken
 import com.example.investup.databinding.FragmentHomeBinding
 import com.example.investup.databinding.FragmentProfileBinding
+import com.example.investup.navigationInterface.navigator
 import com.example.investup.publicObject.ApiInstance
 import com.example.investup.retrofit.dataClass.Post
 import kotlinx.coroutines.CoroutineScope
@@ -26,6 +28,7 @@ class HomeFragment : Fragment(), PostAdapter.Listener {
 
     lateinit var binding: FragmentHomeBinding
     val postAdapter = PostAdapter(this)
+    private val dataModeLPost: DataModeLPost by activityViewModels()
     private val dataModelToken: DataModelToken by activityViewModels()
 
     override fun onCreateView(
@@ -68,6 +71,7 @@ class HomeFragment : Fragment(), PostAdapter.Listener {
     }
 
     override fun onClickPost(post: Post) {
-        TODO("Not yet implemented")
+        dataModeLPost.id.value = post.id
+        navigator().navToPostDetails()
     }
 }

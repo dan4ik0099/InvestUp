@@ -1,6 +1,7 @@
 package com.example.investup.publicObject
 
 object ConstNavigation {
+    var currentFragment = 0
     const val HOME = 1
     const val CHAT = 2
     const val LOGIN = 3
@@ -9,4 +10,5 @@ object ConstNavigation {
     const val PROFILE = 6
     const val EDIT_PROFILE = 7
     const val ADD_POST = 8
+    const val POST_DETAILS = 9
 }

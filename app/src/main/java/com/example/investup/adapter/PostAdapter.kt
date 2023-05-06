@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.investup.R
 import com.example.investup.databinding.PostItemBinding
+import com.example.investup.publicObject.ConstNavigation
 
 import com.example.investup.retrofit.dataClass.Post
 import com.example.investup.retrofit.dataClass.Tag
@@ -22,20 +23,27 @@ class PostAdapter(val listener: Listener) : RecyclerView.Adapter<PostAdapter.Pos
         val binding = PostItemBinding.bind(item)
         fun bind(post: Post, listener : Listener) = with(binding) {
             post.apply {
+
                 Picasso.get().load(user.avatar).into(userProfileImageView)
                 nameSurnameLabel.text = ("${user.firstName} ${user.lastName}")
-                dateLabel.text = createdAt
+                val formatedDate = createdAt.substringBefore("T")
+                dateLabel.text = formatedDate
                 titleLabel.text = title
                 shortDescriptionLabel.text = shortDescription
                 tagsRecyclerView.layoutManager = LinearLayoutManager(itemView.context, RecyclerView.HORIZONTAL, false)
                 val tagInPostAdapter = TagInPostAdapter()
                 tagsRecyclerView.adapter = tagInPostAdapter
                 tagInPostAdapter.addTags(post.tags)
+                if (ConstNavigation.currentFragment == ConstNavigation.PROFILE){
+                    favoriteButton.visibility = View.GONE
+                    dontShowButton.visibility = View.GONE
+                }
 
 
             }
+            Height.heightPostProfile += itemView.height
             itemView.setOnClickListener{
-
+                listener.onClickPost(post)
 
             }
 
@@ -59,6 +67,7 @@ class PostAdapter(val listener: Listener) : RecyclerView.Adapter<PostAdapter.Pos
         postList.addAll(posts)
         notifyDataSetChanged()
     }
+
     interface Listener{
         fun onClickPost(post: Post)
     }

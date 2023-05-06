@@ -1,13 +1,9 @@
 package com.example.investup
 
-import android.Manifest.permission.CAMERA
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
@@ -28,12 +24,11 @@ import com.example.investup.navigationInterface.Navigator
 import com.example.investup.publicObject.ConstNavigation
 
 
-class MainActivity : AppCompatActivity(), Navigator{
+class MainActivity : AppCompatActivity(), Navigator {
     var pref: SharedPreferences? = null
-    private val dataModelToken : DataModelToken by viewModels()
+    private val dataModelToken: DataModelToken by viewModels()
     private lateinit var pLauncher: ActivityResultLauncher<Array<String>>
-    private var isHomeFragment: Boolean = false
-    private var currentFragment: Int = 0
+    private var idString: Int = -1
 
 
     private lateinit var binding: ActivityMainBinding
@@ -51,13 +46,19 @@ class MainActivity : AppCompatActivity(), Navigator{
     private fun init() {
 
         pref = getSharedPreferences("base", Context.MODE_PRIVATE)
-        dataModelToken.accessToken.value = pref?.getString("accessToken","-1")
+        dataModelToken.accessToken.value = pref?.getString("accessToken", "-1")
         println("its ${dataModelToken.accessToken.value}")
-        if (dataModelToken.accessToken.value=="-1") {
-            openFragment(LoginFragment.newInstance(), binding.mainPlaceholder.id, ConstNavigation.LOGIN)
+        if (dataModelToken.accessToken.value == "-1") {
+            openFragment(
+                LoginFragment.newInstance(),
+                binding.mainPlaceholder.id,
+                ConstNavigation.LOGIN,
+                R.string.Authorize,
+                false,
+                false
+            )
             binding.bottomNavigationView.visibility = View.GONE
-        }
-        else{
+        } else {
             navToHome()
 
 
@@ -94,33 +95,59 @@ class MainActivity : AppCompatActivity(), Navigator{
         }
 
 
-
-
     }
-    private fun openFragment(f: Fragment, idHolder: Int, navigation: Int) {
+
+    private fun openFragment(
+        f: Fragment,
+        idHolder: Int,
+        navigation: Int,
+        idStringTitle: Int,
+        isArrowButtonOn: Boolean,
+        isAddBackStack: Boolean,
+        idStringPrevTitle: Int = -1
+    ) {
 
 
-        currentFragment = navigation
-        if (currentFragment == ConstNavigation.EDIT_PROFILE || currentFragment == ConstNavigation.ADD_POST){
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        ConstNavigation.currentFragment = navigation
+        supportActionBar?.title = getString(idStringTitle)
+        if (isAddBackStack)
+
+            supportFragmentManager.beginTransaction().replace(idHolder, f).addToBackStack(null)
+                .commit()
+        else
+            supportFragmentManager.beginTransaction().replace(idHolder, f)
+                .commit()
+
+       supportActionBar?.setDisplayHomeAsUpEnabled(isArrowButtonOn)
 
 
-        }else {
+        idString = idStringPrevTitle
 
-            supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        }
-        supportFragmentManager.beginTransaction().replace(idHolder, f).commit()
 
     }
 
     override fun goToRegister() {
 
-        openFragment(RegisterFragment.newInstance(), binding.mainPlaceholder.id, ConstNavigation.REGISTER)
+        openFragment(
+            RegisterFragment.newInstance(),
+            binding.mainPlaceholder.id,
+            ConstNavigation.REGISTER,
+            R.string.Register,
+            false,
+            false
+        )
     }
 
 
     override fun goToLogin() {
-        openFragment(LoginFragment.newInstance(), binding.mainPlaceholder.id, ConstNavigation.LOGIN)
+        openFragment(
+            LoginFragment.newInstance(),
+            binding.mainPlaceholder.id,
+            ConstNavigation.LOGIN,
+            R.string.Authorize,
+            false,
+            false
+        )
 
         binding.bottomNavigationView.visibility = View.GONE
     }
@@ -129,71 +156,151 @@ class MainActivity : AppCompatActivity(), Navigator{
         binding.bottomNavigationView.visibility = View.VISIBLE
 
     }
-    override fun navAfterLoginRegister(){
+
+    override fun navToPostDetails() {
+
+        openFragment(
+            PostDetailsFragment.newInstance(),
+            binding.mainPlaceholder.id,
+            ConstNavigation.POST_DETAILS,
+            R.string.Post,
+            true,
+            true,
+            R.string.Home
+        )
+    }
+
+    override fun navAfterLoginRegister() {
         binding.bottomNavigationView.selectedItemId = R.id.home
 
     }
 
     override fun navToHome() {
-        supportActionBar?.title = getString(R.string.Home)
+        openFragment(
+            HomeFragment.newInstance(),
+            binding.mainPlaceholder.id,
+            ConstNavigation.HOME,
+            R.string.Home,
+            false,
+            true
+        )
 
-        openFragment(HomeFragment.newInstance(), binding.mainPlaceholder.id, ConstNavigation.HOME)
-        isHomeFragment = true;
     }
 
     override fun navToChat() {
-        supportActionBar?.title = getString(R.string.Chat)
-        openFragment(ChatFragment.newInstance(), binding.mainPlaceholder.id, ConstNavigation.CHAT)
+        openFragment(
+            ChatFragment.newInstance(),
+            binding.mainPlaceholder.id,
+            ConstNavigation.CHAT,
+            R.string.Chat,
+            false,
+            false
+        )
     }
+
     override fun navToFavorite() {
-        supportActionBar?.title = getString(R.string.Favorite)
+
 
     }
 
     override fun navToProfile() {
-        supportActionBar?.title = getString(R.string.Profile)
-        openFragment(ProfileFragment.newInstance(), binding.mainPlaceholder.id, ConstNavigation.PROFILE)
+
+        openFragment(
+            ProfileFragment.newInstance(),
+            binding.mainPlaceholder.id,
+            ConstNavigation.PROFILE,
+            R.string.Profile,
+            false,
+            false
+        )
     }
 
     override fun navToEditProfile() {
-        supportActionBar?.title = getString(R.string.Edit_profile)
 
-        openFragment(EditProfileFragment.newInstance(), binding.mainPlaceholder.id, ConstNavigation.EDIT_PROFILE)
+
+        openFragment(
+            EditProfileFragment.newInstance(),
+            binding.mainPlaceholder.id,
+            ConstNavigation.EDIT_PROFILE,
+            R.string.Edit_profile,
+            true,
+            false,
+            R.string.Profile
+        )
 
     }
 
     override fun onBackPressed() {
-        if (currentFragment== ConstNavigation.HOME){
-            finish()
+        if(idString!=-1){
+            supportActionBar?.title = getString(idString)
         }
-        else{
-            navAfterLoginRegister()
+        when (ConstNavigation.currentFragment) {
+            ConstNavigation.HOME -> {
+                finish()
+            }
+            ConstNavigation.EDIT_PROFILE -> {
+                navToProfile()
+            }
+            ConstNavigation.POST_DETAILS -> {
+                backTo(ConstNavigation.HOME, false, R.string.Home)
+            }
+            ConstNavigation.ADD_POST -> {
+                navToProfile()
+            }
+
 
         }
+
+
     }
-    override fun navToAddPost(){
-        supportActionBar?.title = getString(R.string.Creating_post)
-        openFragment(AddPostFragment.newInstance(), binding.mainPlaceholder.id, ConstNavigation.ADD_POST)
+
+    override fun navToAddPost() {
+        openFragment(
+            AddPostFragment.newInstance(),
+            binding.mainPlaceholder.id,
+            ConstNavigation.ADD_POST,
+            R.string.Creating_post,
+            true,
+            false,
+            R.string.Profile
+        )
     }
+
+    fun backTo(navigation: Int,isArrowButtonOn: Boolean, idStringTitle: Int){
+        ConstNavigation.currentFragment = navigation
+        supportActionBar?.title = getString(idStringTitle)
+        supportActionBar?.setDisplayHomeAsUpEnabled(isArrowButtonOn)
+        supportFragmentManager.popBackStack()
+    }
+
 
 
     override fun onSupportNavigateUp(): Boolean {
-        when(currentFragment){
+        if(idString!=-1){
+            supportActionBar?.title = getString(idString)
+        }
+        when (ConstNavigation.currentFragment) {
             ConstNavigation.EDIT_PROFILE -> {
                 navToProfile()
             }
             ConstNavigation.ADD_POST -> {
                 navToProfile()
             }
+            ConstNavigation.POST_DETAILS -> {
+
+             backTo(ConstNavigation.HOME, false, idString)
+
+            }
         }
         return true
     }
 
-    private fun checkCameraPermission(){
-        when{
+
+    private fun checkCameraPermission() {
+        when {
             ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED ->{
-                Toast.makeText(this,"Camera run", Toast.LENGTH_LONG).show()
+                    == PackageManager.PERMISSION_GRANTED -> {
+                Toast.makeText(this, "Camera run", Toast.LENGTH_LONG).show()
             }
 
             else -> {
@@ -202,13 +309,14 @@ class MainActivity : AppCompatActivity(), Navigator{
         }
     }
 
-    private fun registerPermissionListener(){
+    private fun registerPermissionListener() {
         pLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()){
-            if(it[READ_EXTERNAL_STORAGE] == true){
-                Toast.makeText(this,"Camera run", Toast.LENGTH_LONG).show()
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) {
+            if (it[READ_EXTERNAL_STORAGE] == true) {
+                Toast.makeText(this, "Camera run", Toast.LENGTH_LONG).show()
             } else {
-                Toast.makeText(this,"Permission denied", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show()
             }
         }
     }

@@ -107,7 +107,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/Post"
+                    android:text="@string/Post_upload"
                     app:layout_constraintEnd_toEndOf="@+id/add_deleteVideoButton"
                     app:layout_constraintStart_toStartOf="@+id/add_deleteVideoButton"
                     app:layout_constraintTop_toBottomOf="@+id/add_deleteVideoButton" />
