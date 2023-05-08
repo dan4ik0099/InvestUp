@@ -6,17 +6,17 @@
         android:title="@string/Home"
         android:orderInCategory="1"
         />
-
-    <item
-        android:id="@+id/chat"
-        android:icon="@drawable/baseline_question_answer_24"
-        android:title="@string/Chat"
-        android:orderInCategory="2"/>
     <item
         android:id="@+id/favorite"
         android:icon="@drawable/baseline_favorite_24"
         android:title="@string/Favorite"
+        android:orderInCategory="2"/>
+    <item
+        android:id="@+id/chat"
+        android:icon="@drawable/baseline_question_answer_24"
+        android:title="@string/Chat"
         android:orderInCategory="3"/>
+
     <item
         android:id="@+id/profile"
         android:icon="@drawable/baseline_person_24"

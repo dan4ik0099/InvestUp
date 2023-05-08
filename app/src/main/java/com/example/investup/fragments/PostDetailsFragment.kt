@@ -19,10 +19,18 @@ import com.example.investup.dataModels.DataModelToken
 import com.example.investup.databinding.FragmentPostDetailsBinding
 import com.example.investup.databinding.FragmentProfileBinding
 import com.example.investup.publicObject.ApiInstance
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.SimpleExoPlayer
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 
 class PostDetailsFragment : Fragment() {
@@ -30,6 +38,8 @@ class PostDetailsFragment : Fragment() {
     lateinit var binding: FragmentPostDetailsBinding
     private val dataModelToken: DataModelToken by activityViewModels()
     private val dataModeLPost: DataModeLPost by activityViewModels()
+    lateinit var player: ExoPlayer
+
 
 
     override fun onCreateView(
@@ -46,8 +56,14 @@ class PostDetailsFragment : Fragment() {
 
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        player.release()
+    }
+
 
     private fun init() {
+        player = ExoPlayer.Builder(requireContext()).build()
         binding.apply {
 
             val loadPostJob = CoroutineScope(Dispatchers.IO)
@@ -59,7 +75,25 @@ class PostDetailsFragment : Fragment() {
                     )
                 val body = responsePost.body()
                 body?.let {
+
+
+
+
+
                     requireActivity().runOnUiThread {
+
+                        videosView.player = player
+
+
+                        val mediaItem = MediaItem.fromUri(Uri.parse(it.videoUrl));
+
+                        player.setMediaItem(mediaItem)
+
+                        player.prepare()
+
+                        player.play()
+
+
 
 
                         Picasso.get().load(it.user.avatar).into(userProfileImageView)
@@ -69,67 +103,6 @@ class PostDetailsFragment : Fragment() {
                         titleLabel.text = it.title
                         shortDescriptionLabel.text = it.shortDescription
                         fullDescriptionLabel.text = it.description
-                        val uri = Uri.parse(it.videoUrl)
-                        videosView.setVideoURI(uri)
-                        videosView.start()
-                        videosView.seekTo(10)
-                        videosView.pause()
-                        videosView.setOnClickListener {
-                            println(videosView.isPlaying)
-                            if (videosView.isPlaying) {
-                                playButton.visibility = View.VISIBLE
-
-                                videosView.pause()
-                            } else {
-                                videosView.start()
-                                playButton.visibility = View.INVISIBLE
-                            }
-                        }
-                        videosView.setOnPreparedListener { mediaPlayer ->
-
-                            val duration = mediaPlayer.duration
-                            seekBar.max = duration
-
-
-                        }
-
-                        videosView.setOnInfoListener { _, what, _ ->
-                            if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
-                                if (!isDragging) {
-
-                                    seekBar.post(object : Runnable {
-                                        override fun run() {
-                                            val currentPosition = videosView.currentPosition
-                                            seekBar.progress = currentPosition
-                                            seekBar.postDelayed(this, 100)
-                                        }
-                                    })
-                                }
-                            }
-                            true
-                        }
-
-                        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                                if (fromUser) {
-                                    println("прогресс " + progress)
-                                    videosView.seekTo(progress)
-                                }
-                            }
-
-                            override fun onStartTrackingTouch(seekBar: SeekBar) {
-                                isDragging = true
-                                videosView.pause()
-                                playButton.visibility = View.VISIBLE
-                            }
-
-                            override fun onStopTrackingTouch(seekBar: SeekBar) {
-                                isDragging = false
-                                println("gg " + seekBar.progress)
-                                videosView.start()
-                                playButton.visibility = View.INVISIBLE
-                            }
-                        })
 
 
 

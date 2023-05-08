@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,8 +13,8 @@ import com.example.investup.adapter.PostAdapter
 import com.example.investup.adapter.TagAdapter
 import com.example.investup.dataModels.DataModeLPost
 import com.example.investup.dataModels.DataModelToken
-import com.example.investup.databinding.FragmentHomeBinding
-import com.example.investup.databinding.FragmentProfileBinding
+import com.example.investup.databinding.FragmentFavoriteBinding
+
 import com.example.investup.navigationInterface.navigator
 import com.example.investup.publicObject.ApiInstance
 import com.example.investup.publicObject.ToastHelper
@@ -26,10 +25,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
+class FavoriteFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
 
 
-    lateinit var binding: FragmentHomeBinding
+    lateinit var binding: FragmentFavoriteBinding
     private val tagAdapter = TagAdapter(this)
     private val postAdapter = PostAdapter(this)
     private var allTags = ArrayList<Tag>()
@@ -43,7 +42,7 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding = FragmentFavoriteBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -79,9 +78,10 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
             val loadPostsJob = CoroutineScope(Dispatchers.IO)
             loadPostsJob.launch {
                 val response = ApiInstance.getApi()
-                    .requestAllPosts("Bearer ${dataModelToken.accessToken.value}")
+                    .requestFavoritePosts("Bearer ${dataModelToken.accessToken.value}")
                 val body = response.body()
                 body?.let {
+                    println("whayt " + body.size)
                     requireActivity().runOnUiThread {
 
                         postRecyclerView.setHasFixedSize(false)
@@ -113,7 +113,7 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
     companion object {
 
         @JvmStatic
-        fun newInstance() = HomeFragment()
+        fun newInstance() = FavoriteFragment()
     }
 
     override fun onClickPost(post: Post) {

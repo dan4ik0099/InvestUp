@@ -41,7 +41,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:2.5.3"
 
     implementation"com.squareup.picasso:picasso:2.8"
-
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.6'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

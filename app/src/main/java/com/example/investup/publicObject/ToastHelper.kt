@@ -7,11 +7,14 @@ import androidx.fragment.app.FragmentActivity
 import com.example.investup.R
 
 object ToastHelper {
-    fun toast(activity: Activity ,id: Int){
+    fun toast(activity: Activity, successStringId: Int, unSuccessStringId: Int, message: String) {
+
         Toast.makeText(
             activity,
-            activity.resources.getText(id),
+            activity.resources.getText(if (message == "OK") successStringId else unSuccessStringId ),
             Toast.LENGTH_SHORT
         ).show()
+
+
     }
 }

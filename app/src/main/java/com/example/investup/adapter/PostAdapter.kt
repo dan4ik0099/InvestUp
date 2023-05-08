@@ -1,5 +1,6 @@
 package com.example.investup.adapter
 
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,9 +35,38 @@ class PostAdapter(val listener: Listener) : RecyclerView.Adapter<PostAdapter.Pos
                 val tagInPostAdapter = TagInPostAdapter()
                 tagsRecyclerView.adapter = tagInPostAdapter
                 tagInPostAdapter.addTags(post.tags)
-                if (ConstNavigation.currentFragment == ConstNavigation.PROFILE){
+                if (ConstNavigation.currentFragmentStack.peek() == ConstNavigation.PROFILE){
+
+                    editPostButton.setOnClickListener {
+                        listener.onClickEditButton(post)
+                    }
+
                     favoriteButton.visibility = View.GONE
                     dontShowButton.visibility = View.GONE
+
+                    editPostButton.visibility = View.VISIBLE
+                }else{
+
+                    favoriteButton.setOnClickListener {
+
+                        if(favoriteButton.text  == itemView.resources.getString(R.string.Add_to_favorite)) {
+                            favoriteButton.setText(R.string.Delete_from_favorite)
+                        }else {
+                            favoriteButton.setText(R.string.Add_to_favorite)
+                        }
+                            listener.onClickAddToFavoriteButton(post)
+
+                    }
+                    dontShowButton.setOnClickListener {
+                        listener.onClickDontShowButton(post)
+                    }
+
+
+                    favoriteButton.visibility = View.VISIBLE
+                    dontShowButton.visibility = View.VISIBLE
+
+                    editPostButton.visibility = View.GONE
+
                 }
 
 
@@ -64,12 +94,17 @@ class PostAdapter(val listener: Listener) : RecyclerView.Adapter<PostAdapter.Pos
         holder.bind(postList[position], listener)
     }
     fun addPosts(posts: ArrayList<Post>){
+        postList.clear()
         postList.addAll(posts)
         notifyDataSetChanged()
     }
 
     interface Listener{
         fun onClickPost(post: Post)
+        fun onClickDontShowButton(post: Post)
+        fun onClickAddToFavoriteButton(post: Post)
+        fun onClickDeleteButton(post: Post)
+        fun onClickEditButton(post: Post)
     }
 
 

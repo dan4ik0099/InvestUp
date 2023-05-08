@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.investup.adapter.Height
 import com.example.investup.adapter.PostAdapter
+import com.example.investup.dataModels.DataModeLPost
 import com.example.investup.publicObject.ApiInstance
 import com.example.investup.dataModels.DataModelToken
 import com.example.investup.databinding.FragmentProfileBinding
@@ -25,6 +26,7 @@ import kotlinx.coroutines.launch
 class ProfileFragment : Fragment(), PostAdapter.Listener {
     lateinit var binding: FragmentProfileBinding
     private val dataModelToken: DataModelToken by activityViewModels()
+    private val dataModeLPost: DataModeLPost by activityViewModels()
     private val postsAdapter = PostAdapter(this)
 
 
@@ -96,6 +98,26 @@ class ProfileFragment : Fragment(), PostAdapter.Listener {
     }
 
     override fun onClickPost(post: Post) {
+
+
+        dataModeLPost.id.value = post.id
+        navigator().navToPostDetails()
+    }
+
+    override fun onClickDontShowButton(post: Post) {
         TODO("Not yet implemented")
+    }
+
+    override fun onClickAddToFavoriteButton(post: Post) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onClickDeleteButton(post: Post) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onClickEditButton(post: Post) {
+        dataModeLPost.id.value = post.id
+        navigator().navToEditPost()
     }
 }

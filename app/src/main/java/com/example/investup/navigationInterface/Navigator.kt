@@ -8,6 +8,8 @@ fun Fragment.navigator(): Navigator{
 }
 
 interface Navigator {
+
+    fun navToEditPost()
     fun navToPostDetails()
     fun navAfterLoginRegister()
     fun navToFavorite()

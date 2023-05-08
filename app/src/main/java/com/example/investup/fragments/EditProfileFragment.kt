@@ -150,19 +150,14 @@ class EditProfileFragment : Fragment() {
                         )
                     )
                     requireActivity().runOnUiThread {
+                        ToastHelper.toast(
+                            requireActivity(),
+                            R.string.Toast_saved_data,
+                            R.string.Unexpected_error,
+                            response.message()
+                        )
 
 
-                        if (response.message() == "OK") {
-                            ToastHelper.toast(
-                                requireActivity(),
-                                R.string.Toast_saved_data
-                            )
-                        } else {
-                            ToastHelper.toast(
-                                requireActivity(),
-                                R.string.Toast_unexpected_error
-                            )
-                        }
                     }
                 }
             }
@@ -179,26 +174,12 @@ class EditProfileFragment : Fragment() {
                         )
                         val message = response.message()
                         requireActivity().runOnUiThread {
-                            if (message == "OK") {
-                                Toast.makeText(
-                                    activity,
-                                    R.string.Toast_saved_data,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else {
-                                println(message)
-                                ToastHelper.toast(
-                                    requireActivity(),
-                                    R.string.Toast_unexpected_error
-                                )
-
-                                Toast.makeText(
-                                    activity,
-                                    R.string.Toast_unexpected_error,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-
-                            }
+                            ToastHelper.toast(
+                                requireActivity(),
+                                R.string.Toast_saved_password,
+                                R.string.Unexpected_error,
+                                message
+                            )
                         }
 
                     }

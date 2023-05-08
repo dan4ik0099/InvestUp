@@ -11,18 +11,27 @@ import com.example.investup.retrofit.dataClass.Tag
 class TagAdapter(val listener: Listener) : RecyclerView.Adapter<TagAdapter.TagHolder>() {
     private var tagList = ArrayList<Tag>()
 
+
     class TagHolder(item: View) : RecyclerView.ViewHolder(item) {
         val binding = TagItemBinding.bind(item)
-        fun bind(tag: Tag, listener : Listener) = with(binding) {
-            isOnImage.visibility = View.GONE
-            itemView.setOnClickListener{
-                if (isOnImage.visibility == View.VISIBLE) isOnImage.visibility = View.GONE
-                else isOnImage.visibility = View.VISIBLE
+        fun bind(tag: Tag, listener: Listener) = with(binding) {
+            if (tag.isActive) isOnImage.visibility = View.VISIBLE
+            else isOnImage.visibility = View.GONE
+            itemView.setOnClickListener {
+                if (tag.isActive) {
+                    isOnImage.visibility = View.GONE
+                    tag.isActive = false
+                } else {
+                    isOnImage.visibility = View.VISIBLE
+                    tag.isActive = true
+                }
                 listener.onClickTag(tag)
 
             }
             tagName.text = tag.value
+
         }
+
 
     }
 
@@ -38,14 +47,20 @@ class TagAdapter(val listener: Listener) : RecyclerView.Adapter<TagAdapter.TagHo
     override fun onBindViewHolder(holder: TagHolder, position: Int) {
         holder.bind(tagList[position], listener)
     }
-    fun addTags(tags: ArrayList<Tag>){
+
+    fun addTags(tags: ArrayList<Tag>) {
         tagList.addAll(tags)
         notifyDataSetChanged()
     }
-    interface Listener{
-        fun onClickTag(tag: Tag)
+
+    open fun addActiveTags(tags: ArrayList<Tag>) {
+        tagList.addAll(tags)
+        notifyDataSetChanged()
     }
 
+    interface Listener {
+        fun onClickTag(tag: Tag)
+    }
 
 
 }

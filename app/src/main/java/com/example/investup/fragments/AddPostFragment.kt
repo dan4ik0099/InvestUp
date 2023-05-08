@@ -31,6 +31,8 @@ import com.example.investup.databinding.FragmentAddPostBinding
 import com.example.investup.navigationInterface.navigator
 import com.example.investup.publicObject.ApiInstance
 import com.example.investup.retrofit.dataClass.Tag
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -48,12 +50,15 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
     lateinit var binding: FragmentAddPostBinding
     private val dataModelAddPost: DataModelAddPost by activityViewModels()
     private val dataModelToken: DataModelToken by activityViewModels()
+
+    lateinit var player: ExoPlayer
+
     var launcher: ActivityResultLauncher<Intent>? = null
     private var havePermission = false
     private var allTags = ArrayList<Tag>()
     private var activeTags = ArrayList<Tag>()
 
-    private var isDragging = false
+
     private val adapter = TagAdapter(this)
 
     override fun onCreateView(
@@ -66,7 +71,12 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        init()
 
+    }
+
+
+    private fun init() {
         binding.apply {
 
 
@@ -91,21 +101,22 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
 
             }
 
-
-
-
             titleInput.setText(dataModelAddPost.title.value)
             shortDescriptionInput.setText(dataModelAddPost.shortDescription.value)
             fullDescriptionInput.setText(dataModelAddPost.fullDescription.value)
             if (dataModelAddPost.video.value != null) {
+                player = ExoPlayer.Builder(requireContext()).build()
                 println("videos " + dataModelAddPost.video.value.toString())
-                videoView.setVideoURI(dataModelAddPost.video.value)
-                videoView.seekTo(10)
+                videosView.visibility = View.VISIBLE
+                videosView.player = player
+                val mediaItem = MediaItem.fromUri(dataModelAddPost.video.value.toString());
+                player.setMediaItem(mediaItem)
+                player.prepare()
+                player.play()
                 addDeleteVideoButton.setText(R.string.Delete_video)
-                relativeLayout.visibility = View.VISIBLE
             } else {
+                videosView.visibility = View.GONE
                 addDeleteVideoButton.setText(R.string.Add_video)
-                relativeLayout.visibility = View.GONE
             }
 
             launcher =
@@ -113,77 +124,17 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
                     if (it.resultCode == Activity.RESULT_OK) {
                         val res: Intent? = it.data
                         dataModelAddPost.video.value = res?.data
-                        videoView.setVideoURI(res?.data)
-                        videoView.start()
-                        playButton.visibility = View.INVISIBLE
-                        relativeLayout.visibility = View.VISIBLE
+                        player = ExoPlayer.Builder(requireContext()).build()
+                        videosView.visibility = View.VISIBLE
+                        videosView.player = player
+                        val mediaItem = MediaItem.fromUri(res?.data.toString());
+
+                        player.setMediaItem(mediaItem)
+                        player.prepare()
+                        player.play()
                         addDeleteVideoButton.setText(R.string.Delete_video)
                     }
                 }
-
-
-
-            videoView.setOnClickListener {
-                println(videoView.isPlaying)
-                if (videoView.isPlaying) {
-                    playButton.visibility = View.VISIBLE
-
-                    videoView.pause()
-                } else {
-                    videoView.start()
-                    playButton.visibility = View.INVISIBLE
-                }
-            }
-
-
-            videoView.setOnPreparedListener { mediaPlayer ->
-
-                val duration = mediaPlayer.duration
-                seekBar.max = duration
-
-
-            }
-
-            videoView.setOnInfoListener { _, what, _ ->
-                if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
-                    if (!isDragging) {
-
-                        seekBar.post(object : Runnable {
-                            override fun run() {
-                                val currentPosition = videoView.currentPosition
-                                seekBar.progress = currentPosition
-                                seekBar.postDelayed(this, 100)
-                            }
-                        })
-                    }
-                }
-                true
-            }
-
-            seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                    if (fromUser) {
-                        println("прогресс " + progress)
-                        videoView.seekTo(progress)
-                    }
-                }
-
-                override fun onStartTrackingTouch(seekBar: SeekBar) {
-                    isDragging = true
-                    videoView.pause()
-                    playButton.visibility = View.VISIBLE
-                }
-
-                override fun onStopTrackingTouch(seekBar: SeekBar) {
-                    isDragging = false
-                    println("gg " + seekBar.progress)
-                    videoView.start()
-                    playButton.visibility = View.INVISIBLE
-                }
-            })
-
-
-
 
             titleInput.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable) {}
@@ -203,7 +154,6 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
 
 
             })
-
             shortDescriptionInput.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable) {}
 
@@ -267,16 +217,11 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
                     } else {
                         addDeleteVideoButton.setText(R.string.Add_video)
                         dataModelAddPost.video.value = null
-                        videoView.stopPlayback()
-
-                        videoView.setVideoURI(null)
-                        relativeLayout.visibility = View.GONE
-
+                        player.release()
+                        videosView.visibility = View.GONE
 
                     }
-
                 }
-
             }
 
             uploadPostButton.setOnClickListener {
@@ -290,8 +235,6 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
                     val shortDescription =
                         dataModelAddPost.shortDescription.value?.toRequestBody("text/plain".toMediaTypeOrNull())
 
-                    val text = ArrayList<String>()
-                    text.add("6442dbdca63dcfbd0f9e644a")
 
                     var helper = UriHelper.URIPathHelper()
 
@@ -299,10 +242,9 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
                         helper.getPath(requireContext(), dataModelAddPost.video.value!!)
                     )
 
-
                     val tags = ArrayList<String>()
 
-                    activeTags.mapTo(tags){
+                    activeTags.mapTo(tags) {
                         it.id
                     }
                     val json = Gson().toJson(tags)
@@ -334,29 +276,10 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
                             println("gg " + response.message())
                         }
                     }
-
-
                 }
                 navigator().navToProfile()
             }
-
         }
-
-    }
-
-    fun buildMultipart(
-        uri: Uri,
-        context: Context,
-        type: String,
-        name: String
-    ): MultipartBody.Part {
-
-        val helper = UriHelper.URIPathHelper()
-        val file = File(helper.getPath(requireContext(), uri)!!)
-        val requestFile = file.asRequestBody(type.toMediaTypeOrNull())
-        val filePart =
-            MultipartBody.Part.createFormData("photo", file.name, requestFile)
-        return filePart
     }
 
     companion object {

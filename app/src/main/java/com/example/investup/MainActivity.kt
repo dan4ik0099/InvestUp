@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(), Navigator {
     var pref: SharedPreferences? = null
     private val dataModelToken: DataModelToken by viewModels()
     private lateinit var pLauncher: ActivityResultLauncher<Array<String>>
-    private var idString: Int = -1
+
 
 
     private lateinit var binding: ActivityMainBinding
@@ -104,24 +104,37 @@ class MainActivity : AppCompatActivity(), Navigator {
         idStringTitle: Int,
         isArrowButtonOn: Boolean,
         isAddBackStack: Boolean,
-        idStringPrevTitle: Int = -1
+
     ) {
 
 
-        ConstNavigation.currentFragment = navigation
-        supportActionBar?.title = getString(idStringTitle)
-        if (isAddBackStack)
 
-            supportFragmentManager.beginTransaction().replace(idHolder, f).addToBackStack(null)
+        ConstNavigation.currentFragmentStack.push(navigation)
+
+
+        if (isAddBackStack) {
+            ConstNavigation.titleStack.push(supportActionBar?.title.toString())
+
+            println("kkkk  " + ConstNavigation.titleStack.peek())
+
+            supportFragmentManager.beginTransaction().replace(idHolder, f,).addToBackStack(null)
                 .commit()
-        else
+
+        }
+
+        else{
             supportFragmentManager.beginTransaction().replace(idHolder, f)
                 .commit()
 
+            ConstNavigation.titleStack.clear()
+
+        }
+
+
+        supportActionBar?.title = getString(idStringTitle)
        supportActionBar?.setDisplayHomeAsUpEnabled(isArrowButtonOn)
 
 
-        idString = idStringPrevTitle
 
 
     }
@@ -157,6 +170,17 @@ class MainActivity : AppCompatActivity(), Navigator {
 
     }
 
+    override fun navToEditPost() {
+        openFragment(
+            EditPostFragment.newInstance(),
+            binding.mainPlaceholder.id,
+            ConstNavigation.EDIT_POST,
+            R.string.Edit_post,
+            true,
+            true,
+        )
+    }
+
     override fun navToPostDetails() {
 
         openFragment(
@@ -166,7 +190,6 @@ class MainActivity : AppCompatActivity(), Navigator {
             R.string.Post,
             true,
             true,
-            R.string.Home
         )
     }
 
@@ -185,6 +208,7 @@ class MainActivity : AppCompatActivity(), Navigator {
             true
         )
 
+
     }
 
     override fun navToChat() {
@@ -199,7 +223,14 @@ class MainActivity : AppCompatActivity(), Navigator {
     }
 
     override fun navToFavorite() {
-
+        openFragment(
+            FavoriteFragment.newInstance(),
+            binding.mainPlaceholder.id,
+            ConstNavigation.FAVORITE,
+            R.string.Favorite,
+            false,
+            false
+        )
 
     }
 
@@ -224,28 +255,31 @@ class MainActivity : AppCompatActivity(), Navigator {
             ConstNavigation.EDIT_PROFILE,
             R.string.Edit_profile,
             true,
-            false,
-            R.string.Profile
+            true,
+
         )
 
     }
 
     override fun onBackPressed() {
-        if(idString!=-1){
-            supportActionBar?.title = getString(idString)
+        if(!ConstNavigation.titleStack.empty()){
+            supportActionBar?.title = ConstNavigation.titleStack.pop()
         }
-        when (ConstNavigation.currentFragment) {
+        when (ConstNavigation.currentFragmentStack.peek()) {
             ConstNavigation.HOME -> {
                 finish()
             }
             ConstNavigation.EDIT_PROFILE -> {
-                navToProfile()
+                backTo(false)
             }
             ConstNavigation.POST_DETAILS -> {
-                backTo(ConstNavigation.HOME, false, R.string.Home)
+                backTo(false)
             }
             ConstNavigation.ADD_POST -> {
-                navToProfile()
+                backTo(false)
+            }
+            ConstNavigation.EDIT_POST -> {
+                backTo(false)
             }
 
 
@@ -262,36 +296,20 @@ class MainActivity : AppCompatActivity(), Navigator {
             R.string.Creating_post,
             true,
             false,
-            R.string.Profile
         )
     }
 
-    fun backTo(navigation: Int,isArrowButtonOn: Boolean, idStringTitle: Int){
-        ConstNavigation.currentFragment = navigation
-        supportActionBar?.title = getString(idStringTitle)
+    fun backTo(isArrowButtonOn: Boolean){
         supportActionBar?.setDisplayHomeAsUpEnabled(isArrowButtonOn)
         supportFragmentManager.popBackStack()
+        ConstNavigation.currentFragmentStack.pop()
+
     }
 
 
 
     override fun onSupportNavigateUp(): Boolean {
-        if(idString!=-1){
-            supportActionBar?.title = getString(idString)
-        }
-        when (ConstNavigation.currentFragment) {
-            ConstNavigation.EDIT_PROFILE -> {
-                navToProfile()
-            }
-            ConstNavigation.ADD_POST -> {
-                navToProfile()
-            }
-            ConstNavigation.POST_DETAILS -> {
-
-             backTo(ConstNavigation.HOME, false, idString)
-
-            }
-        }
+        onBackPressed()
         return true
     }
 

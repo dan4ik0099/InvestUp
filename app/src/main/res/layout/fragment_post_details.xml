@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="10dp"
     tools:context=".fragments.PostDetailsFragment">
 
     <ScrollView
@@ -13,18 +14,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:paddingStart="16dp"
-                android:paddingLeft="16dp"
-                android:paddingTop="16dp"
-                android:paddingEnd="16dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="16dp">
+                android:layout_height="wrap_content">
+
 
                 <TextView
                     android:id="@+id/titleLabel"
@@ -49,49 +44,11 @@
                     app:layout_constraintStart_toStartOf="@+id/titleLabel"
                     app:layout_constraintTop_toBottomOf="@+id/titleLabel" />
 
-                <RelativeLayout
-                    android:id="@+id/relativeLayout"
-                    android:layout_width="0dp"
-                    android:layout_height="300dp"
-                    android:layout_marginTop="16dp"
-                    android:background="#000000"
-                    app:layout_constraintEnd_toEndOf="@+id/tagsRcView"
-                    app:layout_constraintStart_toStartOf="@+id/tagsRcView"
-                    app:layout_constraintTop_toBottomOf="@+id/shortDescriptionLabel">
-
-                    <VideoView
-                        android:id="@+id/videosView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_centerInParent="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginTop="0dp"
-                        android:layout_marginBottom="0dp"
-                        android:foregroundGravity="center" />
-
-                    <ImageView
-                        android:id="@+id/playButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/baseline_play_arrow_24" />
-
-                    <SeekBar
-                        android:id="@+id/seekBar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentBottom="true"
-                        android:progressBackgroundTint="#FFFFFF" />
-
-                </RelativeLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/tagsRecyclerView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     app:layout_constraintEnd_toEndOf="@+id/shortDescriptionLabel"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@+id/shortDescriptionLabel"
@@ -159,8 +116,13 @@
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="8dp"
                     android:backgroundTint="@color/theme"
+                    android:elevation="8dp"
                     android:fontFamily="@font/roboto_medium"
+                    android:letterSpacing="0.03"
                     android:text="@string/Delete_from_favorite"
+                    android:textAllCaps="false"
+                    android:textSize="16sp"
+                    app:cornerRadius="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/dontShowButton"
                     app:layout_constraintTop_toBottomOf="@+id/imageView9" />
@@ -230,17 +192,29 @@
                     app:layout_constraintStart_toEndOf="@+id/cardView5"
                     app:layout_constraintTop_toTopOf="@+id/cardView5" />
 
+                <com.google.android.exoplayer2.ui.PlayerView
+                    android:id="@+id/videosView"
+                    android:layout_width="0dp"
+                    android:layout_height="300dp"
+
+                    android:layout_marginTop="8dp"
+                    android:background="#000000"
+                    android:backgroundTint="#000000"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/shortDescriptionLabel"
+                    app:resize_mode="fit" />
+
                 <TextView
                     android:id="@+id/fullDescriptionLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:text="TextView"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="@+id/relativeLayout"
                     app:layout_constraintStart_toStartOf="@+id/shortDescriptionLabel"
-                    app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
+                    app:layout_constraintTop_toBottomOf="@id/videosView" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -253,9 +227,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
                     android:backgroundTint="@color/green"
+                    android:elevation="8dp"
+                    android:letterSpacing="0.03"
                     android:text="@string/Contact"
+                    android:textAllCaps="false"
+                    android:textSize="16sp"
+                    app:cornerRadius="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/reportButton"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -264,9 +242,13 @@
                     android:id="@+id/reportButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
                     android:backgroundTint="@color/negative"
+                    android:elevation="8dp"
+                    android:letterSpacing="0.03"
                     android:text="@string/Report"
+                    android:textAllCaps="false"
+                    android:textSize="16sp"
+                    app:cornerRadius="20dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/contactButton" />
 

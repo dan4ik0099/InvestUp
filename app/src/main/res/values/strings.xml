@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">InvestUp</string>
     <string name="Enter">Войти</string>
-    <string name="To_register">РЕГИСТРАЦИЯ</string>
-    <string name="Authorize">АВТОРИЗАЦИЯ</string>
+    <string name="To_register">Регистрация</string>
+    <string name="Authorize">Авторизация</string>
     <string name="To_authorize">К авторизации</string>
     <string name="Register">Регистрация</string>
     <string name="Create_account">Создать аккаунт</string>
@@ -18,16 +18,20 @@
     <string name="Hint_title">Название</string>
     <string name="Hint_short_description">Короткое описание</string>
     <string name="Hint_full_description">Описание идеи</string>
-    <string name="Delete_video">УДАЛИТЬ ВИДЕО</string>
-    <string name="Add_video">ЗАГРУЗИТЬ ВИДЕО</string>
+    <string name="Delete_video">Удалить видео</string>
+    <string name="Add_video">Загрузить видео</string>
     <string name="Post_upload">Опубликовать</string>
     <string name="Comments">Комментарии</string>
     <string name="Post">Пост</string>
+    <string name="Delete">Удалить</string>
+    <string name="Edit">Редактировать</string>
+    <string name="Edit_delete">Редактировать/Удалить</string>
+    <string name="Edit_post">Редактирование поста</string>
+
 
     <string name="Add_to_favorite">Добавить в избранное</string>
 
     <string name="Delete_from_favorite">Удалить из избранного</string>
-
 
 
     <string name="Contact">Связаться</string>
@@ -44,11 +48,14 @@
     <string name="Profile">Аккаунт</string>
     <string name="Edit_profile">Изменение профиля</string>
     <string name="Save">Сохранить</string>
-
+    <string name="Success_delete">Пост успешно удален</string>
+    <string name="Unexpected_error">Неизвестная ошибка</string>
 
     <string name="Toast_saved_data">Данные сохранены</string>
     <string name="Toast_saved_password">Пароль обновлен</string>
     <string name="Toast_unexpected_error">Неизвестная ошибка</string>
+    <string name="Toast_success_add_to_favorite">Пост перемещен в избранное</string>
+    <string name="Toast_success_delete_from_favorite">Пост удален из избранного</string>
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
