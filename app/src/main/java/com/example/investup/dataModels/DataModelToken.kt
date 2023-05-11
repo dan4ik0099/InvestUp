@@ -10,4 +10,9 @@ class DataModelToken : ViewModel() {
     val refreshToken: MutableLiveData<String> by lazy{
         MutableLiveData<String>()
     }
+    val myId: MutableLiveData<String> by lazy{
+        MutableLiveData<String>()
+    }
+
+
 }

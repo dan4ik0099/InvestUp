@@ -49,6 +49,7 @@ class TagAdapter(val listener: Listener) : RecyclerView.Adapter<TagAdapter.TagHo
     }
 
     fun addTags(tags: ArrayList<Tag>) {
+        tagList.clear()
         tagList.addAll(tags)
         notifyDataSetChanged()
     }

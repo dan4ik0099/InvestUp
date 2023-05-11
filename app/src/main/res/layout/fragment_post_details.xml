@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
+    android:padding="5dp"
     tools:context=".fragments.PostDetailsFragment">
 
     <ScrollView
@@ -18,7 +18,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:padding="5dp">
 
 
                 <TextView
@@ -26,7 +27,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="TextView"
                     android:textColor="@color/black"
                     android:textSize="22sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -38,7 +38,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="asfasssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/titleLabel"
@@ -59,7 +58,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="2125"
                     app:layout_constraintStart_toEndOf="@+id/imageView8"
                     app:layout_constraintTop_toTopOf="@+id/imageView8" />
 
@@ -87,7 +85,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="13221"
                     app:layout_constraintStart_toEndOf="@+id/imageView9"
                     app:layout_constraintTop_toTopOf="@+id/imageView9" />
 
@@ -101,41 +98,27 @@
                     app:srcCompat="@drawable/baseline_favorite_24" />
 
                 <TextView
-                    android:id="@+id/textView15"
+                    android:id="@+id/favoriteCountLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="1127"
                     app:layout_constraintStart_toEndOf="@+id/imageView4"
                     app:layout_constraintTop_toTopOf="@+id/imageView4" />
 
                 <Button
                     android:id="@+id/favoriteButton"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="8dp"
                     android:backgroundTint="@color/theme"
                     android:elevation="8dp"
-                    android:fontFamily="@font/roboto_medium"
                     android:letterSpacing="0.03"
                     android:text="@string/Delete_from_favorite"
                     android:textAllCaps="false"
                     android:textSize="16sp"
                     app:cornerRadius="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/dontShowButton"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView9" />
-
-                <ImageView
-                    android:id="@+id/dontShowButton"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toBottomOf="@+id/favoriteButton"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/favoriteButton"
-                    app:srcCompat="@drawable/baseline_visibility_off_24_unchecked" />
+                    app:layout_constraintTop_toBottomOf="@+id/contactButton" />
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView5"
@@ -172,7 +155,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
-                            android:text="TextView"
                             android:textSize="14sp"
                             app:layout_constraintBottom_toBottomOf="@+id/imageCard"
                             app:layout_constraintStart_toEndOf="@+id/imageCard"
@@ -186,7 +168,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="TextView"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@+id/cardView5"
                     app:layout_constraintStart_toEndOf="@+id/cardView5"
@@ -210,23 +191,16 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="TextView"
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="@+id/shortDescriptionLabel"
                     app:layout_constraintTop_toBottomOf="@id/videosView" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
                 <Button
                     android:id="@+id/contactButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
                     android:backgroundTint="@color/green"
                     android:elevation="8dp"
                     android:letterSpacing="0.03"
@@ -234,23 +208,9 @@
                     android:textAllCaps="false"
                     android:textSize="16sp"
                     app:cornerRadius="20dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/reportButton"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <Button
-                    android:id="@+id/reportButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/negative"
-                    android:elevation="8dp"
-                    android:letterSpacing="0.03"
-                    android:text="@string/Report"
-                    android:textAllCaps="false"
-                    android:textSize="16sp"
-                    app:cornerRadius="20dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/contactButton" />
+                    app:layout_constraintEnd_toEndOf="@+id/favoriteButton"
+                    app:layout_constraintStart_toStartOf="@+id/favoriteButton"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -275,9 +235,46 @@
                     android:id="@+id/commentsRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/commentInput" />
+
+                <EditText
+                    android:imeOptions="actionDone"
+                    android:id="@+id/commentInput"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:ems="10"
+                    android:hint="@string/Add_comment"
+                    android:inputType="textMultiLine|textPersonName"
+                    android:maxLength="99"
+                    app:layout_constraintEnd_toStartOf="@+id/uploadCommentButton"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+                <Button
+                    android:id="@+id/uploadCommentButton"
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="2dp"
+                    android:padding="0dp"
+                    android:paddingStart="0dp"
+                    android:paddingLeft="0dp"
+                    android:paddingTop="0dp"
+                    android:paddingEnd="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    app:cornerRadius="200dp"
+                    app:icon="@drawable/baseline_check_24"
+                    app:iconGravity="textEnd"
+                    app:iconPadding="0dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/commentInput"
+                    app:layout_constraintEnd_toEndOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>

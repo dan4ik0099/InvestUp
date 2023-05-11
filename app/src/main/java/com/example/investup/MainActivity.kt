@@ -6,29 +6,30 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.example.investup.dataModels.DataModelAddPost
 
 import com.example.investup.dataModels.DataModelToken
 import com.example.investup.databinding.ActivityMainBinding
 import com.example.investup.fragments.*
 import com.example.investup.navigationInterface.Navigator
+import com.example.investup.publicObject.ApiInstance
 import com.example.investup.publicObject.ConstNavigation
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity(), Navigator {
     var pref: SharedPreferences? = null
     private val dataModelToken: DataModelToken by viewModels()
-    private lateinit var pLauncher: ActivityResultLauncher<Array<String>>
 
+    private lateinit var pLauncher: ActivityResultLauncher<Array<String>>
 
 
     private lateinit var binding: ActivityMainBinding
@@ -47,23 +48,7 @@ class MainActivity : AppCompatActivity(), Navigator {
 
         pref = getSharedPreferences("base", Context.MODE_PRIVATE)
         dataModelToken.accessToken.value = pref?.getString("accessToken", "-1")
-        println("its ${dataModelToken.accessToken.value}")
-        if (dataModelToken.accessToken.value == "-1") {
-            openFragment(
-                LoginFragment.newInstance(),
-                binding.mainPlaceholder.id,
-                ConstNavigation.LOGIN,
-                R.string.Authorize,
-                false,
-                false
-            )
-            binding.bottomNavigationView.visibility = View.GONE
-        } else {
-            navToHome()
 
-
-            navOn()
-        }
         dataModelToken.accessToken.observe(this) {
             val editor = pref?.edit()
             editor?.apply {
@@ -74,6 +59,38 @@ class MainActivity : AppCompatActivity(), Navigator {
             println("its save = = " + pref?.getString("accessToken", "feee"))
 
         }
+
+        val initIdJob = CoroutineScope(Dispatchers.IO)
+        initIdJob.launch {
+            val response = ApiInstance.getApi()
+                .requestInfoMe(dataModelToken.accessToken.value!!)
+
+            runOnUiThread {
+                if (response.message() == "OK") {
+                    val body = response.body()
+                    body?.let {
+                        dataModelToken.myId.value = it.id
+                        navToHome()
+                        navOn()
+                    }
+                } else if (response.message() != "OK") {
+
+                    openFragment(
+                        LoginFragment.newInstance(),
+                        binding.mainPlaceholder.id,
+                        ConstNavigation.LOGIN,
+                        R.string.Authorize,
+                        false,
+                        false
+                    )
+                    binding.bottomNavigationView.visibility = View.GONE
+                }
+            }
+        }
+
+
+
+
 
 
         binding.bottomNavigationView.setOnItemSelectedListener {
@@ -94,7 +111,6 @@ class MainActivity : AppCompatActivity(), Navigator {
             true
         }
 
-
     }
 
     private fun openFragment(
@@ -105,8 +121,7 @@ class MainActivity : AppCompatActivity(), Navigator {
         isArrowButtonOn: Boolean,
         isAddBackStack: Boolean,
 
-    ) {
-
+        ) {
 
 
         ConstNavigation.currentFragmentStack.push(navigation)
@@ -117,12 +132,10 @@ class MainActivity : AppCompatActivity(), Navigator {
 
             println("kkkk  " + ConstNavigation.titleStack.peek())
 
-            supportFragmentManager.beginTransaction().replace(idHolder, f,).addToBackStack(null)
+            supportFragmentManager.beginTransaction().replace(idHolder, f).addToBackStack(null)
                 .commit()
 
-        }
-
-        else{
+        } else {
             supportFragmentManager.beginTransaction().replace(idHolder, f)
                 .commit()
 
@@ -132,9 +145,7 @@ class MainActivity : AppCompatActivity(), Navigator {
 
 
         supportActionBar?.title = getString(idStringTitle)
-       supportActionBar?.setDisplayHomeAsUpEnabled(isArrowButtonOn)
-
-
+        supportActionBar?.setDisplayHomeAsUpEnabled(isArrowButtonOn)
 
 
     }
@@ -168,6 +179,18 @@ class MainActivity : AppCompatActivity(), Navigator {
     override fun navOn() {
         binding.bottomNavigationView.visibility = View.VISIBLE
 
+    }
+
+    override fun scrollSave(y: Int) {
+        val editor = pref?.edit()
+        editor?.apply {
+            putInt("scrollY", y)
+            apply()
+        }
+    }
+
+    override fun scrollTo(): Int {
+        return pref?.getInt("scrollY", 0)!!
     }
 
     override fun navToEditPost() {
@@ -257,12 +280,12 @@ class MainActivity : AppCompatActivity(), Navigator {
             true,
             true,
 
-        )
+            )
 
     }
 
     override fun onBackPressed() {
-        if(!ConstNavigation.titleStack.empty()){
+        if (!ConstNavigation.titleStack.empty()) {
             supportActionBar?.title = ConstNavigation.titleStack.pop()
         }
         when (ConstNavigation.currentFragmentStack.peek()) {
@@ -295,17 +318,18 @@ class MainActivity : AppCompatActivity(), Navigator {
             ConstNavigation.ADD_POST,
             R.string.Creating_post,
             true,
-            false,
+            true,
         )
     }
 
-    fun backTo(isArrowButtonOn: Boolean){
+
+
+    fun backTo(isArrowButtonOn: Boolean) {
         supportActionBar?.setDisplayHomeAsUpEnabled(isArrowButtonOn)
         supportFragmentManager.popBackStack()
         ConstNavigation.currentFragmentStack.pop()
 
     }
-
 
 
     override fun onSupportNavigateUp(): Boolean {

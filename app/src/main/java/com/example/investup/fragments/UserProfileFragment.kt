@@ -8,27 +8,28 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
 import com.example.investup.adapter.PostAdapter
 import com.example.investup.adapter.TagAdapter
 import com.example.investup.dataModels.DataModeLPost
-import com.example.investup.publicObject.ApiInstance
 import com.example.investup.dataModels.DataModelToken
-import com.example.investup.databinding.FragmentProfileBinding
-import com.example.investup.navigationInterface.navigator
+import com.example.investup.dataModels.DataModelUser
+import com.example.investup.databinding.FragmentUserProfileBinding
+import com.example.investup.publicObject.ApiInstance
 import com.example.investup.retrofit.dataClass.Post
 import com.example.investup.retrofit.dataClass.Tag
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class ProfileFragment : Fragment(), PostAdapter.Listener,TagAdapter.Listener {
-    lateinit var binding: FragmentProfileBinding
+class UserProfileFragment : Fragment(), PostAdapter.Listener,TagAdapter.Listener {
+
+    lateinit var binding: FragmentUserProfileBinding
     private val dataModelToken: DataModelToken by activityViewModels()
     private val dataModeLPost: DataModeLPost by activityViewModels()
+    private val dataModelUser: DataModelUser by activityViewModels()
+
     private val postsAdapter = PostAdapter(this)
     private val tagAdapter = TagAdapter(this)
     private var allTags = ArrayList<Tag>()
@@ -37,21 +38,20 @@ class ProfileFragment : Fragment(), PostAdapter.Listener,TagAdapter.Listener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        binding = FragmentProfileBinding.inflate(inflater, container, false)
+        binding = FragmentUserProfileBinding.inflate(inflater, container, false)
         return binding.root
-
-
     }
+
+
+
 
     override fun onResume() {
         super.onResume()
-        binding.tipsRecyclerView.removeAllViews()
-        binding.myPostsRecyclerView.removeAllViews()
+
+        binding.userPostsRecyclerView.removeAllViews()
 
 
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,31 +59,33 @@ class ProfileFragment : Fragment(), PostAdapter.Listener,TagAdapter.Listener {
 
     }
 
+
+
     fun init() {
 
         binding.apply {
             val jobInfoInit = CoroutineScope(Dispatchers.IO)
-            jobInfoInit.launch {
-                val response =
-                    ApiInstance.getApi().requestInfoMe(dataModelToken.accessToken.value!!)
-                val message = response.body()
-
-                message?.apply {
-
-
-                   withContext(Dispatchers.Main) {
-
-
-                        nameSurNameText.text = ("${firstName} ${lastName}")
-                        loginText.text = email
-                        Picasso.get().load(avatar).into(imageView)
-                        cardView2.setOnClickListener {
-                            navigator().navToEditProfile()
-
-                        }
-                    }
-                }
-            }
+//            jobInfoInit.launch {
+//                val response =
+//                    ApiInstance.getApi().requestUserById("dataModelToken.accessToken.value!!)
+//                val message = response.body()
+//
+//                message?.apply {
+//
+//
+//                   withContext(Dispatchers.Main) {
+//
+//
+//                        nameSurNameText.text = ("${firstName} ${lastName}")
+//                        loginText.text = email
+//                        Picasso.get().load(avatar).into(imageView)
+//                        cardView2.setOnClickListener {
+//                            navigator().navToEditProfile()
+//
+//                        }
+//                    }
+//                }
+//            }
 
 
             tagsRecyclerView.layoutManager =
@@ -109,30 +111,36 @@ class ProfileFragment : Fragment(), PostAdapter.Listener,TagAdapter.Listener {
             }
 
 
-            myPostsRecyclerView.layoutManager =
+            userPostsRecyclerView.layoutManager =
                 LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            myPostsRecyclerView.adapter = postsAdapter
+            userPostsRecyclerView.adapter = postsAdapter
             val jobPostInit = CoroutineScope(Dispatchers.IO)
             jobPostInit.launch {
                 val responsePosts = ApiInstance.getApi()
-                    .requestMyPosts(dataModelToken.accessToken.value!!)
+                    .requestPostsByUserId(dataModelUser.id.value!! ,dataModelToken.accessToken.value!!)
                 val bodyPosts = responsePosts.body()
                 bodyPosts?.let {
                    withContext(Dispatchers.Main) {
 
                         postsAdapter.addPosts(it, dataModelToken.myId.value!!)
-                        myPostsRecyclerView.setHasFixedSize(false)
+                        userPostsRecyclerView.setHasFixedSize(false)
 
                     }
                 }
 
             }
-            addPostButton.setOnClickListener {
-                navigator().navToAddPost()
-            }
-            exitButton.setOnClickListener {
-                dataModelToken.accessToken.value = "-1"
-                navigator().goToLogin()
+
+
+
+
+
+
+
+
+
+            messageButton.setOnClickListener {
+
+
             }
 
 
@@ -141,18 +149,15 @@ class ProfileFragment : Fragment(), PostAdapter.Listener,TagAdapter.Listener {
     }
 
 
+
     companion object {
 
         @JvmStatic
-        fun newInstance() = ProfileFragment()
-
+        fun newInstance() = UserProfileFragment()
     }
 
     override fun onClickPost(post: Post) {
-
-
-        dataModeLPost.id.value = post.id
-        navigator().navToPostDetails()
+        TODO("Not yet implemented")
     }
 
     override fun onClickDontShowButton(post: Post) {
@@ -168,13 +173,10 @@ class ProfileFragment : Fragment(), PostAdapter.Listener,TagAdapter.Listener {
     }
 
     override fun onClickEditButton(post: Post) {
-        dataModeLPost.id.value = post.id
-        navigator().navToEditPost()
+        TODO("Not yet implemented")
     }
 
     override fun onClickTag(tag: Tag) {
-        if (activeTags.contains(tag)) activeTags.remove(tag)
-        else activeTags.add(tag)
-
+        TODO("Not yet implemented")
     }
 }

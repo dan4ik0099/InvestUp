@@ -15,11 +15,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import com.example.investup.R
@@ -30,19 +32,19 @@ import com.example.investup.dataModels.DataModelToken
 import com.example.investup.databinding.FragmentAddPostBinding
 import com.example.investup.navigationInterface.navigator
 import com.example.investup.publicObject.ApiInstance
+import com.example.investup.publicObject.ToastHelper
 import com.example.investup.retrofit.dataClass.Tag
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.io.File
 
 
@@ -52,18 +54,17 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
     private val dataModelToken: DataModelToken by activityViewModels()
 
     lateinit var player: ExoPlayer
-
-    var launcher: ActivityResultLauncher<Intent>? = null
+    val tags = ArrayList<String>()
+    private var launcher: ActivityResultLauncher<Intent>? = null
     private var havePermission = false
     private var allTags = ArrayList<Tag>()
     private var activeTags = ArrayList<Tag>()
-
+    private lateinit var coroutine: CoroutineScope
 
     private val adapter = TagAdapter(this)
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAddPostBinding.inflate(inflater, container, false)
         return binding.root
@@ -77,6 +78,7 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
 
 
     private fun init() {
+        coroutine = CoroutineScope(Dispatchers.IO)
         binding.apply {
 
 
@@ -84,19 +86,20 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
             tagsRcView.adapter = adapter
 
 
-            val loadTags = CoroutineScope(Dispatchers.IO)
-            loadTags.launch {
-                val response =
-                    ApiInstance.getApi().requestTags("Bearer ${dataModelToken.accessToken.value}")
-                allTags = response.body()!!
 
+            coroutine.launch {
+                val response = ApiInstance.getApi().requestTags(dataModelToken.accessToken.value!!)
+                if (response.code() == 200) {
+                    allTags = response.body()!!
+                } else {
+                    val msg =
+                        response.errorBody()?.string()?.let { JSONObject(it).getString("message") }
+                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+                }
 
+                withContext(Dispatchers.Main) {
+                    adapter.addTags(allTags)
 
-                println("cuja " + response.message())
-                allTags?.let {
-                    requireActivity().runOnUiThread {
-                        adapter.addTags(it)
-                    }
                 }
 
             }
@@ -119,35 +122,32 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
                 addDeleteVideoButton.setText(R.string.Add_video)
             }
 
-            launcher =
-                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                    if (it.resultCode == Activity.RESULT_OK) {
-                        val res: Intent? = it.data
-                        dataModelAddPost.video.value = res?.data
-                        player = ExoPlayer.Builder(requireContext()).build()
-                        videosView.visibility = View.VISIBLE
-                        videosView.player = player
-                        val mediaItem = MediaItem.fromUri(res?.data.toString());
+            launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                if (it.resultCode == Activity.RESULT_OK) {
+                    val res: Intent? = it.data
+                    dataModelAddPost.video.value = res?.data
+                    player = ExoPlayer.Builder(requireContext()).build()
+                    videosView.visibility = View.VISIBLE
+                    videosView.player = player
+                    val mediaItem = MediaItem.fromUri(res?.data.toString());
 
-                        player.setMediaItem(mediaItem)
-                        player.prepare()
-                        player.play()
-                        addDeleteVideoButton.setText(R.string.Delete_video)
-                    }
+                    player.setMediaItem(mediaItem)
+                    player.prepare()
+                    player.play()
+                    addDeleteVideoButton.setText(R.string.Delete_video)
                 }
+            }
 
             titleInput.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable) {}
 
                 override fun beforeTextChanged(
-                    s: CharSequence, start: Int,
-                    count: Int, after: Int
+                    s: CharSequence, start: Int, count: Int, after: Int
                 ) {
                 }
 
                 override fun onTextChanged(
-                    s: CharSequence, start: Int,
-                    before: Int, count: Int
+                    s: CharSequence, start: Int, before: Int, count: Int
                 ) {
                     dataModelAddPost.title.value = titleInput.text.toString()
                 }
@@ -158,14 +158,12 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
                 override fun afterTextChanged(s: Editable) {}
 
                 override fun beforeTextChanged(
-                    s: CharSequence, start: Int,
-                    count: Int, after: Int
+                    s: CharSequence, start: Int, count: Int, after: Int
                 ) {
                 }
 
                 override fun onTextChanged(
-                    s: CharSequence, start: Int,
-                    before: Int, count: Int
+                    s: CharSequence, start: Int, before: Int, count: Int
                 ) {
                     dataModelAddPost.shortDescription.value = shortDescriptionInput.text.toString()
                 }
@@ -176,14 +174,12 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
                 override fun afterTextChanged(s: Editable) {}
 
                 override fun beforeTextChanged(
-                    s: CharSequence, start: Int,
-                    count: Int, after: Int
+                    s: CharSequence, start: Int, count: Int, after: Int
                 ) {
                 }
 
                 override fun onTextChanged(
-                    s: CharSequence, start: Int,
-                    before: Int, count: Int
+                    s: CharSequence, start: Int, before: Int, count: Int
                 ) {
                     dataModelAddPost.fullDescription.value = fullDescriptionInput.text.toString()
                 }
@@ -196,8 +192,7 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
                 val REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 1
 
                 if (ContextCompat.checkSelfPermission(
-                        requireActivity(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE
                     ) != PackageManager.PERMISSION_GRANTED
                 ) {
                     ActivityCompat.requestPermissions(
@@ -225,7 +220,12 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
             }
 
             uploadPostButton.setOnClickListener {
-                if (true) {
+                if (dataModelAddPost.video.value != null
+                    && dataModelAddPost.title.value.toString().isNotEmpty()
+                    && dataModelAddPost.shortDescription.value.toString().isNotEmpty()
+                    && dataModelAddPost.fullDescription.value.toString().isNotEmpty()
+                    && activeTags.isNotEmpty()
+                ) {
 
 
                     val title =
@@ -236,13 +236,13 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
                         dataModelAddPost.shortDescription.value?.toRequestBody("text/plain".toMediaTypeOrNull())
 
 
-                    var helper = UriHelper.URIPathHelper()
+                    val helper = UriHelper.URIPathHelper()
 
                     val videoFile = File(
-                        helper.getPath(requireContext(), dataModelAddPost.video.value!!)
+                        helper.getPath(requireContext(), dataModelAddPost.video.value!!)!!
                     )
 
-                    val tags = ArrayList<String>()
+
 
                     activeTags.mapTo(tags) {
                         it.id
@@ -251,33 +251,46 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
                     val requestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
 
 
-                    val videoRequestBody =
-                        videoFile?.asRequestBody("video/mp4".toMediaTypeOrNull())
+                    val videoRequestBody = videoFile.asRequestBody("video/mp4".toMediaTypeOrNull())
                     val video = MultipartBody.Part.createFormData(
-                        "video",
-                        videoFile.name,
-                        videoRequestBody!!
+                        "video", videoFile.name, videoRequestBody
                     )
-                    println(videoFile.name)
 
-                    val uploadPostJob = CoroutineScope(Dispatchers.IO)
-                    uploadPostJob.launch {
+
+
+                    coroutine.launch {
+
                         val response = ApiInstance.getApi().uploadPost(
-                            "Bearer ${dataModelToken.accessToken.value}",
+                            dataModelToken.accessToken.value!!,
                             title!!,
                             description!!,
                             shortDescription!!,
                             requestBody,
                             video
                         )
-                        println("resp " + response)
-                        val body = response.body()
-                        body?.let {
-                            println("gg " + response.message())
+
+                            withContext(Dispatchers.Main) {
+
+
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.Post_upload_success),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                dataModelAddPost.video.value = null
+                                dataModelAddPost.title.value = null
+                                dataModelAddPost.shortDescription.value = null
+                                dataModelAddPost.fullDescription.value = null
+                                activeTags.clear()
+                                tags.clear()
+                                navigator().navToProfile()
+
+
                         }
+
                     }
                 }
-                navigator().navToProfile()
+
             }
         }
     }
@@ -291,6 +304,8 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
     override fun onClickTag(tag: Tag) {
         if (activeTags.contains(tag)) activeTags.remove(tag)
         else activeTags.add(tag)
+        println("suka" + tag.isActive)
+
 
     }
 }

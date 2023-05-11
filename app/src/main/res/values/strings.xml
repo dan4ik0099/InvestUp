@@ -43,14 +43,18 @@
     <string name="Exit_from_acc">Выйти</string>
     <string name="Creating_post">Создание поста</string>
     <string name="Home">Главная</string>
+
+    <string name="Comment_upload_success">Комментарий опубликован</string>
+    <string name="Post_upload_success">Пост успешно создан</string>
     <string name="Chat">Чат</string>
     <string name="Favorite">Избранное</string>
     <string name="Profile">Аккаунт</string>
+    <string name="Success">Успешно</string>
     <string name="Edit_profile">Изменение профиля</string>
     <string name="Save">Сохранить</string>
     <string name="Success_delete">Пост успешно удален</string>
     <string name="Unexpected_error">Неизвестная ошибка</string>
-
+    <string name="Add_comment">Добавить комментарий…</string>
     <string name="Toast_saved_data">Данные сохранены</string>
     <string name="Toast_saved_password">Пароль обновлен</string>
     <string name="Toast_unexpected_error">Неизвестная ошибка</string>
@@ -59,4 +63,10 @@
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Comment_delete_success">Комментарий успешно удален</string>
+    <string name="Your_posts">Ваши посты</string>
+    <string name="Users_post">Посты пользователя</string>
+    <string name="Message">Сообщение</string>
+    <string name="Empty_favorite">Пока ничего нет</string>
+    <string name="Authorize_error">Ошибка авторизации</string>
 </resources>

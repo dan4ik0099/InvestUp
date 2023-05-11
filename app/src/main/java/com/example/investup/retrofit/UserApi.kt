@@ -2,10 +2,7 @@ package com.example.investup.retrofit
 
 import com.example.investup.retrofit.dataClass.*
 import com.example.investup.retrofit.dataClass.Tag
-import com.example.investup.retrofit.requestModel.UserAuthRequest
-import com.example.investup.retrofit.requestModel.UserChangeNameRequest
-import com.example.investup.retrofit.requestModel.UserChangePasswordRequest
-import com.example.investup.retrofit.requestModel.UserRegisterRequest
+import com.example.investup.retrofit.requestModel.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -35,18 +32,48 @@ interface UserApi {
     @Headers("Content-Type: application/json")
     @GET("/posts/me")
     suspend fun requestMyPosts(@Header("Authorization") accessToken: String): Response<ArrayList<Post>>
+
     @Headers("Content-Type: application/json")
     @GET("/posts/{id}")
-    suspend fun requestPostById(@Path("id") id :String,  @Header("Authorization") accessToken: String): Response<Post>
+    suspend fun requestPostById(
+        @Path("id") id: String,
+        @Header("Authorization") accessToken: String
+    ): Response<Post>
 
     @Headers("Content-Type: application/json")
     @DELETE("/posts/{id}")
-    suspend fun deletePostById(@Path("id") id :String,  @Header("Authorization") accessToken: String): Response<ResponseBody>
+    suspend fun deletePostById(
+        @Path("id") id: String,
+        @Header("Authorization") accessToken: String
+    ): Response<ResponseBody>
 
+    @Headers("Content-Type: application/json")
+    @GET("/posts/user/{userId}")
+    suspend fun requestPostsByUserId(
+        @Path("id") id: String,
+        @Header("Authorization") accessToken: String
+    ): Response<ArrayList<Post>>
+
+    @Headers("Content-Type: application/json")
+    @DELETE("/posts/comment/{id}")
+    suspend fun deleteCommentById(
+        @Path("id") id: String,
+        @Header("Authorization") accessToken: String
+    ): Response<ResponseBody>
 
     @Headers("Content-Type: application/json")
     @POST("/posts/favorite/{id}")
-    suspend fun addToFavoritePostById(@Path("id") id :String,  @Header("Authorization") accessToken: String): Response<ResponseBody>
+    suspend fun addToFavoritePostById(
+        @Path("id") id: String,
+        @Header("Authorization") accessToken: String
+    ): Response<ResponseBody>
+
+    @Headers("Content-Type: application/json")
+    @POST("/posts/unfavorite/{id}")
+    suspend fun deleteFromFavoritePostById(
+        @Path("id") id: String,
+        @Header("Authorization") accessToken: String
+    ): Response<ResponseBody>
 
     @Headers("Content-Type: application/json")
     @GET("tags")
@@ -57,28 +84,47 @@ interface UserApi {
     suspend fun requestChangeNameAndLastName(
         @Header("Authorization") accessToken: String,
         @Body userChangeNameRequest: UserChangeNameRequest
-    ) : Response<Void>
+    ): Response<Void>
+
+    @Headers("Content-Type: application/json")
+    @GET("/posts")
+    suspend fun requestPostsBySearch(
+        @Query("search" , encoded = true) search: String?,
+        @Query("tags[]" , encoded = true) tags: ArrayList<String>?,
+        @Header("Authorization") accessToken: String
+    ): Response<ArrayList<Post>>
+
 
     @POST("/users/change/password")
     suspend fun requestChangePassword(
         @Header("Authorization") accessToken: String,
         @Body userChangeNameRequest: UserChangePasswordRequest
-    ) : Response<RequestBody>
+    ): Response<RequestBody>
+
+    @POST("/posts/comment")
+    suspend fun uploadComment(
+        @Header("Authorization") accessToken: String,
+        @Body uploadCommentRequest: UploadCommentRequest
+    ): Response<Comment>
+
 
     @Multipart
     @POST("/users/avatar")
-    suspend fun uploadFile(@Header("Authorization") accessToken: String,
+    suspend fun uploadFile(
+        @Header("Authorization") accessToken: String,
         @Part photo: MultipartBody.Part
     ): Response<ResponseBody>
 
     @Multipart
     @POST("/posts/create")
-    suspend fun uploadPost(@Header("Authorization") accessToken: String,
-                           @Part("title") title: RequestBody,
-                           @Part("description") description: RequestBody,
-                           @Part("shortDescription") shortDescription: RequestBody,
-                           @Part("tags") tags: RequestBody,
-                           @Part video: MultipartBody.Part?): Response<ResponseBody>
+    suspend fun uploadPost(
+        @Header("Authorization") accessToken: String,
+        @Part("title") title: RequestBody,
+        @Part("description") description: RequestBody,
+        @Part("shortDescription") shortDescription: RequestBody,
+        @Part("tags") tags: RequestBody,
+        @Part video: MultipartBody.Part?
+    ): Response<ResponseBody>
 
 
 }

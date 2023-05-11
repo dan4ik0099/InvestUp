@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context=".fragments.ProfileFragment">
+    tools:context=".fragments.UserProfileFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -31,12 +31,14 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp"
                     android:backgroundTint="@color/white"
                     android:elevation="4dp"
                     app:cardCornerRadius="30dp"
                     app:cardElevation="4dp"
                     app:cardMaxElevation="4dp"
                     app:contentPadding="15dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -84,13 +86,13 @@
                             app:layout_constraintTop_toBottomOf="@+id/nameSurNameText" />
 
                         <Button
-                            android:id="@+id/exitButton"
+                            android:id="@+id/messageButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/negative"
+                            android:backgroundTint="@color/green"
                             android:elevation="8dp"
                             android:letterSpacing="0.03"
-                            android:text="@string/Exit_from_acc"
+                            android:text="@string/Message"
                             android:textAllCaps="false"
                             android:textSize="16sp"
                             app:cornerRadius="20dp"
@@ -102,18 +104,6 @@
 
                 </androidx.cardview.widget.CardView>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/tipsRecyclerView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:nestedScrollingEnabled="true"
-                    app:layout_constraintEnd_toEndOf="@+id/cardView2"
-                    app:layout_constraintStart_toStartOf="@+id/cardView2"
-                    app:layout_constraintTop_toBottomOf="@+id/cardView2">
-
-                </androidx.recyclerview.widget.RecyclerView>
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -124,38 +114,22 @@
                     android:id="@+id/searchView3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:iconifiedByDefault="false"
-                    app:layout_constraintEnd_toEndOf="@+id/addPostButton"
-                    app:layout_constraintStart_toStartOf="@+id/textView9"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView9">
 
                 </SearchView>
-
-                <TextView
-                    android:id="@+id/addPostButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginEnd="16dp"
-                    android:elevation="8dp"
-                    android:foregroundGravity="right"
-                    android:gravity="right"
-                    android:text="@string/Add"
-                    android:textColor="#4CAF50"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/textView9"
-                    tools:ignore="TextContrastCheck" />
 
                 <TextView
                     android:id="@+id/textView9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="12dp"
-                    android:text="@string/Your_posts"
+                    android:text="@string/Users_post"
                     android:textColor="#000000"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -187,7 +161,7 @@
                 android:layout_height="match_parent">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/myPostsRecyclerView"
+                    android:id="@+id/userPostsRecyclerView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="true"

@@ -15,6 +15,7 @@ import com.example.investup.retrofit.requestModel.UserRegisterRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 
@@ -57,7 +58,7 @@ class RegisterFragment : Fragment() {
                         println(response)
                         val userToken = response.body()
                         println("userToken = $userToken")
-                        requireActivity().runOnUiThread {
+                       withContext(Dispatchers.Main) {
                             userToken?.apply {
                                 dataModelToken.accessToken.value = accessToken
                                 dataModelToken.refreshToken.value = refreshToken

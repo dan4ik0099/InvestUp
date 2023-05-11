@@ -36,6 +36,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -45,6 +46,7 @@ class EditProfileFragment : Fragment() {
     lateinit var binding: FragmentEditProfileBinding
     var launcher: ActivityResultLauncher<Intent>? = null
     var havePermission = false
+    lateinit var coroutine: CoroutineScope
     private lateinit var filePart: MultipartBody.Part
     private val dataModelToken: DataModelToken by activityViewModels()
     override fun onCreateView(
@@ -59,16 +61,23 @@ class EditProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        init()
+
+
+    }
+
+    fun init() {
+        coroutine = CoroutineScope(Dispatchers.IO)
         binding.apply {
-            val jobInitInfo = CoroutineScope(Dispatchers.IO)
-            jobInitInfo.launch {
+
+            coroutine.launch {
 
                 println(ApiInstance)
                 val response =
-                    ApiInstance.getApi().requestInfoMe("Bearer ${dataModelToken.accessToken.value}")
+                    ApiInstance.getApi().requestInfoMe(dataModelToken.accessToken.value!!)
                 val message = response.body()
                 message?.let {
-                    requireActivity().runOnUiThread {
+                    withContext(Dispatchers.Main) {
                         nameInput.setText(it.firstName)
                         surnameInput.setText(it.lastName)
                         Picasso.get().load(it.avatar).into(avatarChangeView)
@@ -88,11 +97,10 @@ class EditProfileFragment : Fragment() {
                             "image/jpeg",
                             "photo"
                         )
-                        val uploadImageJob = CoroutineScope(Dispatchers.IO)
-                        uploadImageJob.launch {
+                        coroutine.launch {
                             val response = ApiInstance.getApi()
                                 .uploadFile(
-                                    "Bearer ${dataModelToken.accessToken.value}",
+                                    dataModelToken.accessToken.value!!,
                                     filePart
 
                                 )
@@ -141,55 +149,52 @@ class EditProfileFragment : Fragment() {
 
             }
             saveDataButton.setOnClickListener {
-                val jobSaveData = CoroutineScope(Dispatchers.IO)
-                jobSaveData.launch {
+                coroutine.launch {
                     val response = ApiInstance.getApi().requestChangeNameAndLastName(
-                        "Bearer ${dataModelToken.accessToken.value}",
+                        dataModelToken.accessToken.value!!,
                         UserChangeNameRequest(
                             nameInput.text.toString(), surnameInput.text.toString()
                         )
                     )
-                    requireActivity().runOnUiThread {
-                        ToastHelper.toast(
-                            requireActivity(),
-                            R.string.Toast_saved_data,
-                            R.string.Unexpected_error,
-                            response.message()
-                        )
+                    if (response.code() == 200) {
 
-
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.Toast_saved_data),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }
             savePasswordButton.setOnClickListener {
                 if (newPasswordInput.text == repeatPasswordInput.text) {
-                    val jobSavePassword = CoroutineScope(Dispatchers.IO)
-                    jobSavePassword.launch {
+
+                    coroutine.launch {
                         val response = ApiInstance.getApi().requestChangePassword(
-                            "Bearer ${dataModelToken.accessToken.value}",
+                            dataModelToken.accessToken.value!!,
                             UserChangePasswordRequest(
                                 oldPasswordInput.text.toString(),
                                 newPasswordInput.text.toString()
                             )
                         )
-                        val message = response.message()
-                        requireActivity().runOnUiThread {
-                            ToastHelper.toast(
-                                requireActivity(),
-                                R.string.Toast_saved_password,
-                                R.string.Unexpected_error,
-                                message
-                            )
-                        }
+                        if (response.code() == 200) {
 
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.Toast_saved_password),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
                     }
 
                 }
 
             }
         }
-
-
     }
 
     fun buildMultipart(

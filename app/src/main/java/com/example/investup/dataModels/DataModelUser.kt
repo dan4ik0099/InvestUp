@@ -1,8 +1,12 @@
 package com.example.investup.dataModels
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 
-class DataModelUser {
+class DataModelUser: ViewModel() {
+    val id: MutableLiveData<String> by lazy{
+        MutableLiveData<String>()
+    }
     val firstName: MutableLiveData<String> by lazy{
         MutableLiveData<String>()
     }

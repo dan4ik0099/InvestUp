@@ -8,7 +8,8 @@ fun Fragment.navigator(): Navigator{
 }
 
 interface Navigator {
-
+    fun scrollSave(x: Int)
+    fun scrollTo(): Int
     fun navToEditPost()
     fun navToPostDetails()
     fun navAfterLoginRegister()
@@ -21,4 +22,5 @@ interface Navigator {
     fun navToProfile()
     fun navToEditProfile()
     fun navToAddPost()
+
 }

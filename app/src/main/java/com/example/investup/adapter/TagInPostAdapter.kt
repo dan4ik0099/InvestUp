@@ -32,6 +32,7 @@ class TagInPostAdapter() : RecyclerView.Adapter<TagInPostAdapter.TagInPostHolder
         holder.bind(tagList[position])
     }
     fun addTags(tags: ArrayList<Tag>){
+        tagList.clear()
         tagList.addAll(tags)
         notifyDataSetChanged()
     }
