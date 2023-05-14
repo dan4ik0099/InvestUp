@@ -61,6 +61,13 @@
     <string name="Toast_success_add_to_favorite">Пост перемещен в избранное</string>
     <string name="Toast_success_delete_from_favorite">Пост удален из избранного</string>
 
+    <string name="Sort">Сортировка:</string>
+
+
+    <string name="Sort_date_new">Сначала новые</string>
+    <string name="Sort_date_old">Сначала старые</string>
+    <string name="Sort_view_max">Сначала популярные</string>
+    <string name="Sort_view_min">Сначала непопулярные</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Comment_delete_success">Комментарий успешно удален</string>
@@ -69,4 +76,10 @@
     <string name="Message">Сообщение</string>
     <string name="Empty_favorite">Пока ничего нет</string>
     <string name="Authorize_error">Ошибка авторизации</string>
+    <string name="User_profile">Профиль пользователя</string>
+    <string name="Are_you_sure_about_delete_post">Вы уверенны, что хотите удалить пост?</string>
+    <string name="Yes">Да</string>
+    <string name="Cancel">Отмена</string>
+    <string name="Are_you_sure_about_delete_comment">Вы уверенны, что хотите удалить комментарий?</string>
+    <string name="Are_you_sure_about_exit">Вы уверенны, что хотите выйти из аккаунта?</string>
 </resources>

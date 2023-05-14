@@ -1,6 +1,8 @@
 package com.example.investup.adapter
 
 
+import android.graphics.text.LineBreaker
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,21 +37,21 @@ class CommentAdapter(val listener: Listener) :
                 val formatedDate = createdAt.substringBefore("T")
                 dateLabel.text = formatedDate
                 textLabel.text = text
-
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    textLabel.justificationMode = LineBreaker.JUSTIFICATION_MODE_INTER_WORD
+                }
+                profileButton.setOnClickListener{
+                    listener.onClickProfileButton(user.id)
+                }
                 if (user.id == idAuthor) {
                     deleteCommentButton.visibility = View.VISIBLE
                     deleteCommentButton.setOnClickListener {
                         listener.onClickDeleteCommentButton(comment)
                     }
-                }
-                    else{
+                } else {
                     deleteCommentButton.visibility = View.GONE
-                    }
 
-
-
-
-
+                }
 
 
             }
@@ -79,8 +81,7 @@ class CommentAdapter(val listener: Listener) :
     }
 
 
-    fun deleteItem(id : String)
-    {
+    fun deleteItem(id: String) {
         val com = commentList.find { it.id == id }
         val pos = commentList.indexOf(com)
         commentList.removeAt(pos)
@@ -94,12 +95,13 @@ class CommentAdapter(val listener: Listener) :
         this.idAuthor = idAuthor
         commentList.add(comment)
         println("ari " + commentList.size)
-        notifyItemInserted(itemCount-1)
+        notifyItemInserted(itemCount - 1)
     }
 
     interface Listener {
         fun onClickComment(comment: Comment)
         fun onClickDeleteCommentButton(comment: Comment)
+        fun onClickProfileButton(id : String)
     }
 
 

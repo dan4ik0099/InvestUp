@@ -2,6 +2,7 @@ package com.example.investup.fragments
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -20,20 +21,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.investup.R
 import com.example.investup.adapter.TagAdapter
-import com.example.investup.adapter.TagInPostAdapter
 import com.example.investup.dataModels.DataModeLPost
 import com.example.investup.dataModels.DataModelToken
 import com.example.investup.databinding.FragmentEditPostBinding
-import com.example.investup.databinding.FragmentEditProfileBinding
 import com.example.investup.navigationInterface.navigator
 import com.example.investup.publicObject.ApiInstance
-import com.example.investup.publicObject.ToastHelper
 import com.example.investup.retrofit.dataClass.Post
 import com.example.investup.retrofit.dataClass.Tag
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
+import org.json.JSONObject
 
 
 class EditPostFragment : Fragment(), TagAdapter.Listener {
@@ -165,24 +163,39 @@ class EditPostFragment : Fragment(), TagAdapter.Listener {
                 }
             }
 
+
+
+
+
             deletePostButton.setOnClickListener {
+                val alertDialogBuilder = AlertDialog.Builder(context)
+                alertDialogBuilder.setMessage(getString(R.string.Are_you_sure_about_delete_post))
+                alertDialogBuilder.setPositiveButton(getString(R.string.Yes)) { dialog, which ->
+                    coroutine.launch {
+                        val response = ApiInstance.getApi()
+                            .deletePostById(post.id, dataModelToken.accessToken.value!!)
 
-                coroutine.launch {
-                    val response = ApiInstance.getApi()
-                        .deletePostById(post.id, dataModelToken.accessToken.value!!)
+                        if (response.code() == 200) {
 
-                    if (response.code() == 200) {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.Success_delete), Toast.LENGTH_SHORT
+                                ).show()
 
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.Success_delete), Toast.LENGTH_SHORT
-                            ).show()
-
-                            navigator().navToProfile()
+                                navigator().navToProfile()
+                            }
                         }
                     }
+
+
                 }
+                alertDialogBuilder.setNegativeButton(getString(R.string.Cancel)) { dialog, which ->
+                    // Код отмены действия
+                }
+                val alertDialog = alertDialogBuilder.create()
+                alertDialog.show()
+
             }
         }
     }

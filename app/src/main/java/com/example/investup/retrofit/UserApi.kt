@@ -22,6 +22,12 @@ interface UserApi {
     suspend fun requestInfoMe(@Header("Authorization") accessToken: String): Response<User>
 
     @Headers("Content-Type: application/json")
+    @GET("/users/{id}")
+    suspend fun requestUserInfo(@Path("id") id: String, @Header("Authorization") accessToken: String): Response<User>
+
+
+
+    @Headers("Content-Type: application/json")
     @GET("/posts")
     suspend fun requestAllPosts(@Header("Authorization") accessToken: String): Response<ArrayList<Post>>
 
@@ -48,7 +54,7 @@ interface UserApi {
     ): Response<ResponseBody>
 
     @Headers("Content-Type: application/json")
-    @GET("/posts/user/{userId}")
+    @GET("/posts/user/{id}")
     suspend fun requestPostsByUserId(
         @Path("id") id: String,
         @Header("Authorization") accessToken: String
@@ -87,10 +93,46 @@ interface UserApi {
     ): Response<Void>
 
     @Headers("Content-Type: application/json")
+    @GET("/posts/favorites")
+    suspend fun requestFavoritePostsBySearch(
+        @Query("search" , encoded = true) search: String?,
+        @Query("tags[]" , encoded = true) tags: ArrayList<String>?,
+//        @Query("sort") sort: String?,
+//        @Query("sortValue") sortValue: String?,
+        @Header("Authorization") accessToken: String
+    ): Response<ArrayList<Post>>
+
+
+
+    @Headers("Content-Type: application/json")
     @GET("/posts")
     suspend fun requestPostsBySearch(
         @Query("search" , encoded = true) search: String?,
         @Query("tags[]" , encoded = true) tags: ArrayList<String>?,
+        @Query("sort") sort: String?,
+        @Query("sortValue") sortValue: String?,
+        @Header("Authorization") accessToken: String
+    ): Response<ArrayList<Post>>
+
+    @Headers("Content-Type: application/json")
+    @GET("/posts/me")
+    suspend fun requestMyPostsBySearch(
+        @Query("search" , encoded = true) search: String?,
+        @Query("tags[]" , encoded = true) tags: ArrayList<String>?,
+//        @Query("sort") sort: String?,
+//        @Query("sortValue") sortValue: String?,
+        @Header("Authorization") accessToken: String
+    ): Response<ArrayList<Post>>
+
+
+    @Headers("Content-Type: application/json")
+    @GET("/posts/user/{id}")
+    suspend fun requestUserPostsBySearch(
+        @Path("id") id: String,
+        @Query("search" , encoded = true) search: String?,
+        @Query("tags[]" , encoded = true) tags: ArrayList<String>?,
+//        @Query("sort") sort: String?,
+//        @Query("sortValue") sortValue: String?,
         @Header("Authorization") accessToken: String
     ): Response<ArrayList<Post>>
 

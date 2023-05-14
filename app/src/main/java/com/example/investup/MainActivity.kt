@@ -45,7 +45,14 @@ class MainActivity : AppCompatActivity(), Navigator {
 
 
     private fun init() {
-
+        ConstNavigation.titleWithoutArrow.addAll(
+            arrayListOf(
+                getString(R.string.Home),
+                getString(R.string.Favorite),
+                getString(R.string.Profile),
+                getString(R.string.Chat)
+            )
+        )
         pref = getSharedPreferences("base", Context.MODE_PRIVATE)
         dataModelToken.accessToken.value = pref?.getString("accessToken", "-1")
 
@@ -132,7 +139,7 @@ class MainActivity : AppCompatActivity(), Navigator {
 
             println("kkkk  " + ConstNavigation.titleStack.peek())
 
-            supportFragmentManager.beginTransaction().replace(idHolder, f).addToBackStack(null)
+            supportFragmentManager.beginTransaction().replace(idHolder, f).addToBackStack("app")
                 .commit()
 
         } else {
@@ -181,16 +188,16 @@ class MainActivity : AppCompatActivity(), Navigator {
 
     }
 
-    override fun scrollSave(y: Int) {
-        val editor = pref?.edit()
-        editor?.apply {
-            putInt("scrollY", y)
-            apply()
-        }
-    }
 
-    override fun scrollTo(): Int {
-        return pref?.getInt("scrollY", 0)!!
+    override fun navToUserProfile() {
+        openFragment(
+            UserProfileFragment.newInstance(),
+            binding.mainPlaceholder.id,
+            ConstNavigation.USER_PROFILE,
+            R.string.User_profile,
+            true,
+            true,
+        )
     }
 
     override fun navToEditPost() {
@@ -287,26 +294,44 @@ class MainActivity : AppCompatActivity(), Navigator {
     override fun onBackPressed() {
         if (!ConstNavigation.titleStack.empty()) {
             supportActionBar?.title = ConstNavigation.titleStack.pop()
+
         }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        ConstNavigation.titleWithoutArrow.forEach {
+            println("sasasdasd")
+            println(it)
+            println(supportActionBar?.title.toString())
+            if (supportActionBar?.title.toString() == it) supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
+        }
+
+
         when (ConstNavigation.currentFragmentStack.peek()) {
             ConstNavigation.HOME -> {
                 finish()
             }
             ConstNavigation.EDIT_PROFILE -> {
-                backTo(false)
+                backTo()
             }
             ConstNavigation.POST_DETAILS -> {
-                backTo(false)
+                backTo()
             }
             ConstNavigation.ADD_POST -> {
-                backTo(false)
+                backTo()
+            }
+            ConstNavigation.USER_PROFILE -> {
+                backTo()
             }
             ConstNavigation.EDIT_POST -> {
-                backTo(false)
+                backTo()
+            }
+            ConstNavigation.FAVORITE -> {
+
             }
 
 
         }
+
 
 
     }
@@ -323,9 +348,8 @@ class MainActivity : AppCompatActivity(), Navigator {
     }
 
 
+    fun backTo() {
 
-    fun backTo(isArrowButtonOn: Boolean) {
-        supportActionBar?.setDisplayHomeAsUpEnabled(isArrowButtonOn)
         supportFragmentManager.popBackStack()
         ConstNavigation.currentFragmentStack.pop()
 

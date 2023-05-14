@@ -31,7 +31,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
-                    android:backgroundTint="@color/white"
+                    android:backgroundTint="@color/card_background"
                     android:elevation="4dp"
                     app:cardCornerRadius="30dp"
                     app:cardElevation="4dp"
@@ -121,7 +121,7 @@
                 android:layout_height="wrap_content">
 
                 <SearchView
-                    android:id="@+id/searchView3"
+                    android:id="@+id/searchView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -168,16 +168,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:minHeight="48dp"
-                    app:layout_constraintEnd_toEndOf="@+id/searchView3"
-                    app:layout_constraintStart_toStartOf="@+id/searchView3"
-                    app:layout_constraintTop_toBottomOf="@+id/searchView3" />
+                    app:layout_constraintEnd_toEndOf="@+id/searchView"
+                    app:layout_constraintStart_toStartOf="@+id/searchView"
+                    app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/tagsRecyclerView"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    app:layout_constraintEnd_toEndOf="@+id/searchView3"
-                    app:layout_constraintStart_toStartOf="@+id/searchView3"
+                    app:layout_constraintEnd_toEndOf="@+id/searchView"
+                    app:layout_constraintStart_toStartOf="@+id/searchView"
                     app:layout_constraintTop_toBottomOf="@+id/spinner2" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -194,7 +194,23 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+                <TextView
+                    android:id="@+id/emptyLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="100dp"
+                    android:text="@string/Empty_favorite"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/myPostsRecyclerView" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

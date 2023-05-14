@@ -1,10 +1,13 @@
 package com.example.investup.publicObject
 
+import okio.ArrayIndexOutOfBoundsException
 import java.util.Stack
 
 object ConstNavigation {
     var titleStack: Stack<String> = Stack()
     var currentFragmentStack: Stack<Int> = Stack()
+    var titleWithoutArrow = ArrayList<String>()
+
     const val HOME = 1
     const val CHAT = 2
     const val LOGIN = 3
@@ -15,4 +18,5 @@ object ConstNavigation {
     const val ADD_POST = 8
     const val POST_DETAILS = 9
     const val EDIT_POST = 10
+    const val USER_PROFILE = 11
 }

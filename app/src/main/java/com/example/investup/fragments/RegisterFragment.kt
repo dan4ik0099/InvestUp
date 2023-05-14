@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.example.investup.publicObject.ApiInstance
 
@@ -53,20 +54,23 @@ class RegisterFragment : Fragment() {
 
                             )
                         )
-                        val message = response.errorBody()?.string()
-                            ?.let { JSONObject(it).getString("message") }
-                        println(response)
-                        val userToken = response.body()
-                        println("userToken = $userToken")
-                       withContext(Dispatchers.Main) {
-                            userToken?.apply {
-                                dataModelToken.accessToken.value = accessToken
-                                dataModelToken.refreshToken.value = refreshToken
-                                navigator().navToHome()
-                                navigator().navOn()
-                                navigator().navAfterLoginRegister()
+                        if (response.code() == 200) {
+
+                            val userToken = response.body()
+                            println("userToken = $userToken")
+                            withContext(Dispatchers.Main) {
+                                userToken?.apply {
+                                    dataModelToken.accessToken.value = accessToken
+                                    dataModelToken.refreshToken.value = refreshToken
+                                    navigator().navToHome()
+                                    navigator().navOn()
+                                    navigator().navAfterLoginRegister()
+                                }
                             }
 
+                        }
+                        else
+                        {
 
                         }
                     }

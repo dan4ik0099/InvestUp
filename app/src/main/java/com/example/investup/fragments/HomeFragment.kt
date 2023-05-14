@@ -5,9 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.SearchView.OnQueryTextListener
 import android.widget.Toast
-import androidx.core.view.isEmpty
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,10 +17,11 @@ import com.example.investup.adapter.PostAdapter
 import com.example.investup.adapter.TagAdapter
 import com.example.investup.dataModels.DataModeLPost
 import com.example.investup.dataModels.DataModelToken
+import com.example.investup.dataModels.DataModelUser
 import com.example.investup.databinding.FragmentHomeBinding
 import com.example.investup.navigationInterface.navigator
 import com.example.investup.publicObject.ApiInstance
-import com.example.investup.publicObject.ToastHelper
+import com.example.investup.publicObject.SortingObject
 import com.example.investup.retrofit.dataClass.Post
 import com.example.investup.retrofit.dataClass.Tag
 import kotlinx.coroutines.CoroutineScope
@@ -27,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import retrofit2.http.Query
 
 
 class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
@@ -39,6 +42,8 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
     lateinit var coroutine: CoroutineScope
     private val dataModeLPost: DataModeLPost by activityViewModels()
     private val dataModelToken: DataModelToken by activityViewModels()
+    private val dataModelUser: DataModelUser by activityViewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,7 +68,12 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
 
     private fun init() {
 
-
+        val sortList = listOf(
+            getString(R.string.Sort_date_new),
+            getString(R.string.Sort_date_old),
+            getString(R.string.Sort_view_max),
+            getString(R.string.Sort_view_min)
+        )
         coroutine = CoroutineScope(Dispatchers.IO)
         binding.apply {
             emptyLabel.visibility = View.GONE
@@ -73,6 +83,32 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
             tagsRecyclerView.layoutManager =
                 LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             tagsRecyclerView.adapter = tagAdapter
+
+            val adapterSortedList = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                sortList
+            )
+            spinner.adapter = adapterSortedList
+            spinner.setSelection(0)
+            search()
+            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    search()
+
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // Обработка отсутствия выбранного элемента
+
+                }
+            }
+
 
             coroutine.launch {
 
@@ -129,11 +165,6 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
         }
     }
 
-    companion object {
-
-        @JvmStatic
-        fun newInstance() = HomeFragment()
-    }
 
     private fun search() {
         var postList: ArrayList<Post>? = null
@@ -141,6 +172,8 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
 
             val search: String?
             val searchTags: ArrayList<String>?
+            val sort: String
+            val sortValue: String
             if (activeTags.isNotEmpty()) {
                 searchTags = ArrayList()
                 activeTags.mapTo(searchTags) {
@@ -150,14 +183,42 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
             } else searchTags = null
             if (searchView.query == "") search = null
             else search = searchView.query.toString()
+            when (spinner.selectedItem.toString()) {
+                getString(R.string.Sort_date_new) -> {
+                    sortValue = SortingObject.SortValue.DESC.name
+                    sort = SortingObject.PostsSort.createdAt.name
 
+                }
+                getString(R.string.Sort_date_old) -> {
+                    sortValue = SortingObject.SortValue.ASC.name
+                    sort = SortingObject.PostsSort.createdAt.name
+
+                }
+                getString(R.string.Sort_view_max) -> {
+
+                    sortValue = SortingObject.SortValue.DESC.name
+                    sort = SortingObject.PostsSort.VIEWS.name
+                }
+                getString(R.string.Sort_view_min) -> {
+
+                    sortValue = SortingObject.SortValue.ASC.name
+                    sort = SortingObject.PostsSort.VIEWS.name
+                }
+                else -> {
+                    sort = ""
+                    sortValue = ""
+                }
+            }
 
             coroutine.launch {
 
                 val searchResponse = ApiInstance.getApi().requestPostsBySearch(
                     search,
                     searchTags,
+                    sort,
+                    sortValue,
                     dataModelToken.accessToken.value!!
+
                 )
                 if (searchResponse.code() == 200) {
 
@@ -231,11 +292,24 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
         TODO("Not yet implemented")
     }
 
+    override fun onClickProfileButton(id: String) {
+
+        dataModelUser.id.value = id
+        navigator().navToUserProfile()
+
+    }
+
     override fun onClickTag(tag: Tag) {
         if (activeTags.contains(tag)) activeTags.remove(tag)
         else activeTags.add(tag)
         search()
         println(activeTags.size)
 
+    }
+
+    companion object {
+
+        @JvmStatic
+        fun newInstance() = HomeFragment()
     }
 }

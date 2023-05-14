@@ -1,6 +1,8 @@
 package com.example.investup.adapter
 
 
+import android.graphics.text.LineBreaker
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.investup.R
 import com.example.investup.databinding.PostItemBinding
+import com.example.investup.navigationInterface.navigator
 import com.example.investup.publicObject.ConstNavigation
 
 import com.example.investup.retrofit.dataClass.Post
@@ -35,11 +38,15 @@ class PostAdapter(val listener: Listener) : RecyclerView.Adapter<PostAdapter.Pos
                 commentCountLabel.text = commentsCount.toString()
                 favoriteCountLabel.text = favoriteCount.toString()
 
+
                 shortDescriptionLabel.text = shortDescription
                 tagsRecyclerView.layoutManager = LinearLayoutManager(itemView.context, RecyclerView.HORIZONTAL, false)
                 val tagInPostAdapter = TagInPostAdapter()
                 tagsRecyclerView.adapter = tagInPostAdapter
                 tagInPostAdapter.addTags(post.tags)
+                profileButton.setOnClickListener{
+                    listener.onClickProfileButton(user.id)
+                }
                 if (isFavorite) favoriteButton.setText(R.string.Delete_from_favorite)
 
                 if (user.id == myId){
@@ -51,6 +58,7 @@ class PostAdapter(val listener: Listener) : RecyclerView.Adapter<PostAdapter.Pos
 
                     editPostButton.visibility = View.VISIBLE
                 }else{
+
 
                     favoriteButton.setOnClickListener {
 
@@ -95,6 +103,7 @@ class PostAdapter(val listener: Listener) : RecyclerView.Adapter<PostAdapter.Pos
         return postList.size
     }
 
+
     override fun onBindViewHolder(holder: PostHolder, position: Int) {
         holder.bind(postList[position], myId, listener)
     }
@@ -111,6 +120,7 @@ class PostAdapter(val listener: Listener) : RecyclerView.Adapter<PostAdapter.Pos
         fun onClickAddToFavoriteButton(post: Post, flag: Boolean)
         fun onClickDeleteButton(post: Post)
         fun onClickEditButton(post: Post)
+        fun onClickProfileButton(id: String)
     }
 
 

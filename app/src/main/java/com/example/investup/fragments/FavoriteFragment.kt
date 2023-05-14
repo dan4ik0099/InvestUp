@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,11 +15,11 @@ import com.example.investup.adapter.PostAdapter
 import com.example.investup.adapter.TagAdapter
 import com.example.investup.dataModels.DataModeLPost
 import com.example.investup.dataModels.DataModelToken
+import com.example.investup.dataModels.DataModelUser
 import com.example.investup.databinding.FragmentFavoriteBinding
 
 import com.example.investup.navigationInterface.navigator
 import com.example.investup.publicObject.ApiInstance
-import com.example.investup.publicObject.ToastHelper
 import com.example.investup.retrofit.dataClass.Post
 import com.example.investup.retrofit.dataClass.Tag
 import kotlinx.coroutines.CoroutineScope
@@ -37,6 +38,7 @@ class FavoriteFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
     private var allTags = ArrayList<Tag>()
     private val activeTags = ArrayList<Tag>()
     lateinit var coroutine: CoroutineScope
+    private val dataModeLUser: DataModelUser by activityViewModels()
     private val dataModeLPost: DataModeLPost by activityViewModels()
     private val dataModelToken: DataModelToken by activityViewModels()
 
@@ -56,6 +58,10 @@ class FavoriteFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        init()
+    }
+
+    private fun init() {
         coroutine = CoroutineScope(Dispatchers.IO)
         binding.apply {
             emptyLabel.visibility = View.GONE
@@ -97,11 +103,22 @@ class FavoriteFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
                     }
                 }
             }
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    search()
+                    return true
+                }
+
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    if (searchView.query.isEmpty()) search()
+                    return true
+                }
+
+            })
+
+
         }
-    }
-
-    private fun init() {
-
     }
 
     companion object {
@@ -117,6 +134,55 @@ class FavoriteFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
 
     override fun onClickDontShowButton(post: Post) {
         TODO("Not yet implemented")
+    }
+
+
+    private fun search() {
+        var postList: ArrayList<Post>? = null
+        binding.apply {
+
+            val search: String?
+            val searchTags: ArrayList<String>?
+            if (activeTags.isNotEmpty()) {
+                searchTags = ArrayList()
+                activeTags.mapTo(searchTags) {
+                    it.id
+
+                }
+            } else searchTags = null
+            if (searchView.query == "") search = null
+            else search = searchView.query.toString()
+
+
+            coroutine.launch {
+
+                val searchResponse = ApiInstance.getApi().requestFavoritePostsBySearch(
+                    search,
+                    searchTags,
+                    dataModelToken.accessToken.value!!
+                )
+
+                if (searchResponse.code() == 200) {
+
+                    postList = searchResponse.body()
+                    withContext(Dispatchers.Main) {
+                        if (postList!!.size > 0) {
+                            println("sqqq " + postList!!.size)
+                            postRecyclerView.visibility = View.VISIBLE
+                            postAdapter.addPosts(postList!!, dataModelToken.myId.value!!)
+                            emptyLabel.visibility = View.GONE
+                        } else {
+                            postRecyclerView.visibility = View.GONE
+                            emptyLabel.visibility = View.VISIBLE
+                        }
+                    }
+
+
+                }
+            }
+        }
+
+
     }
 
 
@@ -149,6 +215,7 @@ class FavoriteFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
 
                 }
             }
+
         }
 
     }
@@ -161,9 +228,17 @@ class FavoriteFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
         TODO("Not yet implemented")
     }
 
+    override fun onClickProfileButton(id: String) {
+
+        dataModeLUser.id.value = id
+        navigator().navToUserProfile()
+
+    }
+
+
     override fun onClickTag(tag: Tag) {
         if (activeTags.contains(tag)) activeTags.remove(tag)
         else activeTags.add(tag)
-
+        search()
     }
 }

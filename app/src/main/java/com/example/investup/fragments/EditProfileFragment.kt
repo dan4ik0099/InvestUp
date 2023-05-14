@@ -1,15 +1,11 @@
 package com.example.investup.fragments
 
-import android.Manifest
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.Activity.RESULT_OK
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -26,7 +22,6 @@ import androidx.fragment.app.activityViewModels
 
 import com.example.investup.R
 import com.example.investup.publicObject.ApiInstance
-import com.example.investup.publicObject.ToastHelper
 import com.example.investup.UriHelper
 import com.example.investup.dataModels.DataModelToken
 import com.example.investup.databinding.FragmentEditProfileBinding
