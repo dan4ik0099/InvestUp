@@ -97,8 +97,8 @@ interface UserApi {
     suspend fun requestFavoritePostsBySearch(
         @Query("search" , encoded = true) search: String?,
         @Query("tags[]" , encoded = true) tags: ArrayList<String>?,
-//        @Query("sort") sort: String?,
-//        @Query("sortValue") sortValue: String?,
+        @Query("sort") sort: String?,
+        @Query("sortValue") sortValue: String?,
         @Header("Authorization") accessToken: String
     ): Response<ArrayList<Post>>
 
@@ -119,8 +119,8 @@ interface UserApi {
     suspend fun requestMyPostsBySearch(
         @Query("search" , encoded = true) search: String?,
         @Query("tags[]" , encoded = true) tags: ArrayList<String>?,
-//        @Query("sort") sort: String?,
-//        @Query("sortValue") sortValue: String?,
+        @Query("sort") sort: String?,
+        @Query("sortValue") sortValue: String?,
         @Header("Authorization") accessToken: String
     ): Response<ArrayList<Post>>
 
@@ -131,8 +131,8 @@ interface UserApi {
         @Path("id") id: String,
         @Query("search" , encoded = true) search: String?,
         @Query("tags[]" , encoded = true) tags: ArrayList<String>?,
-//        @Query("sort") sort: String?,
-//        @Query("sortValue") sortValue: String?,
+        @Query("sort") sort: String?,
+        @Query("sortValue") sortValue: String?,
         @Header("Authorization") accessToken: String
     ): Response<ArrayList<Post>>
 

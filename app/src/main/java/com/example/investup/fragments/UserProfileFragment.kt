@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
@@ -19,6 +21,7 @@ import com.example.investup.dataModels.DataModelUser
 import com.example.investup.databinding.FragmentUserProfileBinding
 import com.example.investup.navigationInterface.navigator
 import com.example.investup.publicObject.ApiInstance
+import com.example.investup.publicObject.SortingObject
 import com.example.investup.retrofit.dataClass.Post
 import com.example.investup.retrofit.dataClass.Tag
 import com.squareup.picasso.Picasso
@@ -65,7 +68,6 @@ class UserProfileFragment : Fragment(), PostAdapter.Listener,TagAdapter.Listener
 
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
@@ -74,6 +76,12 @@ class UserProfileFragment : Fragment(), PostAdapter.Listener,TagAdapter.Listener
 
     private fun init() {
         coroutine = CoroutineScope(Dispatchers.IO)
+        val sortList = listOf(
+            getString(R.string.Sort_date_new),
+            getString(R.string.Sort_date_old),
+            getString(R.string.Sort_view_max),
+            getString(R.string.Sort_view_min)
+        )
         binding.apply {
 
             coroutine.launch {
@@ -88,10 +96,7 @@ class UserProfileFragment : Fragment(), PostAdapter.Listener,TagAdapter.Listener
                             nameSurNameText.text = ("${firstName} ${lastName}")
                             loginText.text = email
                             Picasso.get().load(avatar).into(imageView)
-                            cardView2.setOnClickListener {
-                                navigator().navToEditProfile()
 
-                            }
                         }
 
                     } else {
@@ -101,6 +106,31 @@ class UserProfileFragment : Fragment(), PostAdapter.Listener,TagAdapter.Listener
                             ).getString("message"), Toast.LENGTH_SHORT
                         ).show()
                     }
+                }
+            }
+
+            val adapterSortedList = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                sortList
+            )
+            spinner.adapter = adapterSortedList
+            spinner.setSelection(0)
+            search()
+            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    search()
+
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // Обработка отсутствия выбранного элемента
+
                 }
             }
 
@@ -256,7 +286,34 @@ class UserProfileFragment : Fragment(), PostAdapter.Listener,TagAdapter.Listener
             } else searchTags = null
             if (searchView.query == "") search = null
             else search = searchView.query.toString()
+            val sort: String
+            val sortValue: String
+            when (spinner.selectedItem.toString()) {
+                getString(R.string.Sort_date_new) -> {
+                    sortValue = SortingObject.SortValue.DESC.s
+                    sort = SortingObject.PostsSort.CREATED_AT.s
 
+                }
+                getString(R.string.Sort_date_old) -> {
+                    sortValue = SortingObject.SortValue.ASC.s
+                    sort = SortingObject.PostsSort.CREATED_AT.s
+
+                }
+                getString(R.string.Sort_view_max) -> {
+
+                    sortValue = SortingObject.SortValue.DESC.s
+                    sort = SortingObject.PostsSort.VIEWS.s
+                }
+                getString(R.string.Sort_view_min) -> {
+
+                    sortValue = SortingObject.SortValue.ASC.s
+                    sort = SortingObject.PostsSort.VIEWS.s
+                }
+                else -> {
+                    sort = ""
+                    sortValue = ""
+                }
+            }
 
             coroutine.launch {
 
@@ -264,6 +321,8 @@ class UserProfileFragment : Fragment(), PostAdapter.Listener,TagAdapter.Listener
                     dataModelUser.id.value!!,
                     search,
                     searchTags,
+                    sort,
+                    sortValue,
                     dataModelToken.accessToken.value!!
                 )
 

@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
@@ -14,12 +16,14 @@ import com.example.investup.R
 import com.example.investup.adapter.PostAdapter
 import com.example.investup.adapter.TagAdapter
 import com.example.investup.dataModels.DataModeLPost
+import com.example.investup.dataModels.DataModelSearch
 import com.example.investup.dataModels.DataModelToken
 import com.example.investup.dataModels.DataModelUser
 import com.example.investup.databinding.FragmentFavoriteBinding
 
 import com.example.investup.navigationInterface.navigator
 import com.example.investup.publicObject.ApiInstance
+import com.example.investup.publicObject.SortingObject
 import com.example.investup.retrofit.dataClass.Post
 import com.example.investup.retrofit.dataClass.Tag
 import kotlinx.coroutines.CoroutineScope
@@ -41,6 +45,7 @@ class FavoriteFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
     private val dataModeLUser: DataModelUser by activityViewModels()
     private val dataModeLPost: DataModeLPost by activityViewModels()
     private val dataModelToken: DataModelToken by activityViewModels()
+    private val dataModelSearch: DataModelSearch by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,7 +55,16 @@ class FavoriteFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
         binding = FragmentFavoriteBinding.inflate(inflater, container, false)
         return binding.root
     }
+    override fun onStop() {
+        binding.apply {
+            dataModelSearch.searchFavorite.value = searchView.query.toString()
+            dataModelSearch.tagFavorite.value = ArrayList(allTags.filter { it.isActive })
+            dataModelSearch.sortFavorite.value = spinner.selectedItemPosition
 
+
+        }
+        super.onStop()
+    }
     override fun onResume() {
         super.onResume()
         binding.postRecyclerView.removeAllViews()
@@ -63,6 +77,12 @@ class FavoriteFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
 
     private fun init() {
         coroutine = CoroutineScope(Dispatchers.IO)
+        val sortList = listOf(
+            getString(R.string.Sort_date_new),
+            getString(R.string.Sort_date_old),
+            getString(R.string.Sort_view_max),
+            getString(R.string.Sort_view_min)
+        )
         binding.apply {
             emptyLabel.visibility = View.GONE
             postRecyclerView.visibility = View.VISIBLE
@@ -81,28 +101,51 @@ class FavoriteFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
 
 
             }
+            val adapterSortedList = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                sortList
+            )
+            spinner.adapter = adapterSortedList
+            spinner.setSelection(0)
+            search()
+            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    search()
 
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // Обработка отсутствия выбранного элемента
+
+                }
+            }
 
 
             postRecyclerView.layoutManager =
                 LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             postRecyclerView.adapter = postAdapter
-            coroutine.launch {
-                val response = ApiInstance.getApi()
-                    .requestFavoritePosts(dataModelToken.accessToken.value!!)
-                if (response.code() == 200) {
-                    withContext(Dispatchers.Main) {
-                        if (response.body()!!.size > 0) {
-                            postRecyclerView.setHasFixedSize(false)
-                            postAdapter.addPosts(response.body()!!, dataModelToken.myId.value!!)
-                            emptyLabel.visibility = View.GONE
-                        } else {
-                            postRecyclerView.visibility = View.GONE
-                            emptyLabel.visibility = View.VISIBLE
-                        }
-                    }
-                }
-            }
+//            coroutine.launch {
+//                val response = ApiInstance.getApi()
+//                    .requestFavoritePosts(dataModelToken.accessToken.value!!)
+//                if (response.code() == 200) {
+//                    withContext(Dispatchers.Main) {
+//                        if (response.body()!!.size > 0) {
+//                            postRecyclerView.setHasFixedSize(false)
+//                            postAdapter.addPosts(response.body()!!, dataModelToken.myId.value!!)
+//                            emptyLabel.visibility = View.GONE
+//                        } else {
+//                            postRecyclerView.visibility = View.GONE
+//                            emptyLabel.visibility = View.VISIBLE
+//                        }
+//                    }
+//                }
+//            }
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     search()
@@ -152,13 +195,42 @@ class FavoriteFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
             } else searchTags = null
             if (searchView.query == "") search = null
             else search = searchView.query.toString()
+            val sort: String
+            val sortValue: String
+            when (spinner.selectedItem.toString()) {
+                getString(R.string.Sort_date_new) -> {
+                    sortValue = SortingObject.SortValue.DESC.s
+                    sort = SortingObject.PostsSort.CREATED_AT.s
 
+                }
+                getString(R.string.Sort_date_old) -> {
+                    sortValue = SortingObject.SortValue.ASC.s
+                    sort = SortingObject.PostsSort.CREATED_AT.s
+
+                }
+                getString(R.string.Sort_view_max) -> {
+
+                    sortValue = SortingObject.SortValue.DESC.s
+                    sort = SortingObject.PostsSort.VIEWS.s
+                }
+                getString(R.string.Sort_view_min) -> {
+
+                    sortValue = SortingObject.SortValue.ASC.s
+                    sort = SortingObject.PostsSort.VIEWS.s
+                }
+                else -> {
+                    sort = ""
+                    sortValue = ""
+                }
+            }
 
             coroutine.launch {
 
                 val searchResponse = ApiInstance.getApi().requestFavoritePostsBySearch(
                     search,
                     searchTags,
+                    sort,
+                    sortValue,
                     dataModelToken.accessToken.value!!
                 )
 

@@ -2,11 +2,12 @@ package com.example.investup.publicObject
 
 object SortingObject {
 
-    enum class PostsSort(s: String) {
-
+    enum class PostsSort(val s: String) {
+        CREATED_AT("createdAt"),
+        VIEWS("views")
     }
 
-    enum class SortValue(s: String){
+    enum class SortValue(val s: String){
         DESC("desc"),
         ASC("asc")
     }

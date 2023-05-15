@@ -16,6 +16,7 @@ import com.example.investup.R
 import com.example.investup.adapter.PostAdapter
 import com.example.investup.adapter.TagAdapter
 import com.example.investup.dataModels.DataModeLPost
+import com.example.investup.dataModels.DataModelSearch
 import com.example.investup.dataModels.DataModelToken
 import com.example.investup.dataModels.DataModelUser
 import com.example.investup.databinding.FragmentHomeBinding
@@ -43,7 +44,8 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
     private val dataModeLPost: DataModeLPost by activityViewModels()
     private val dataModelToken: DataModelToken by activityViewModels()
     private val dataModelUser: DataModelUser by activityViewModels()
-
+    private val dataModelSearch: DataModelSearch by activityViewModels()
+    private var isFirstTime = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,6 +68,17 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
         init()
     }
 
+    override fun onStop() {
+        binding.apply {
+            dataModelSearch.searchHome.value = searchView.query.toString()
+            dataModelSearch.tagHome.value = ArrayList(allTags.filter { it.isActive })
+            dataModelSearch.sortHome.value = spinner.selectedItemPosition
+
+
+        }
+        super.onStop()
+    }
+
     private fun init() {
 
         val sortList = listOf(
@@ -80,6 +93,12 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
             postRecyclerView.visibility = View.VISIBLE
 
 
+            postRecyclerView.layoutManager =
+                LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+            postRecyclerView.adapter = postAdapter
+            postRecyclerView.setHasFixedSize(false)
+
+
             tagsRecyclerView.layoutManager =
                 LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             tagsRecyclerView.adapter = tagAdapter
@@ -89,9 +108,45 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
                 android.R.layout.simple_spinner_dropdown_item,
                 sortList
             )
+
+            searchView.setQuery(dataModelSearch.searchHome.value, false)
+
+
             spinner.adapter = adapterSortedList
-            spinner.setSelection(0)
-            search()
+
+
+            coroutine.launch {
+
+                val response =
+                    ApiInstance.getApi().requestTags(dataModelToken.accessToken.value!!)
+                if (response.code() == 200) {
+
+
+                    val filteredTags = ArrayList<String>()
+                    dataModelSearch.tagHome.value!!.filter { it.isActive }.mapTo(filteredTags){
+                        it.id
+                    }
+
+                    allTags = response.body()!!
+
+                    filteredTags.forEach{ tag->
+                        allTags.find { tag == it.id}!!.isActive = true
+                    }
+                    println(111111111)
+                    println(allTags.size)
+
+
+                    withContext(Dispatchers.Main) {
+                        tagAdapter.addTags(allTags)
+                        search()
+
+                    }
+                }
+            }
+
+
+
+
             spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>,
@@ -99,7 +154,10 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
                     position: Int,
                     id: Long
                 ) {
-                    search()
+
+                    println(isFirstTime)
+                    if (isFirstTime) isFirstTime = false
+                    else search()
 
                 }
 
@@ -109,61 +167,58 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
                 }
             }
 
+            spinner.setSelection(dataModelSearch.sortHome.value!!)
 
-            coroutine.launch {
-
-                val response =
-                    ApiInstance.getApi().requestTags(dataModelToken.accessToken.value!!)
-                if (response.code() == 200) {
-                    allTags = response.body()!!
-                    withContext(Dispatchers.Main) {
-                        tagAdapter.addTags(allTags)
-                    }
-                }
-            }
 
 
             searchView.setOnQueryTextListener(object : OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
+                    println("brrrrrr1")
                     search()
                     return true
                 }
 
 
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    if (searchView.query.isEmpty()) search()
+                    if (searchView.query.isEmpty()) {search()
+                        println("brrrrrr2")
+                    }
                     return true
                 }
 
             })
+            println("brrrrrr3")
 
-            postRecyclerView.layoutManager =
-                LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            postRecyclerView.adapter = postAdapter
-            postRecyclerView.setHasFixedSize(false)
-            coroutine.launch {
-                val response = ApiInstance.getApi()
-                    .requestAllPosts(dataModelToken.accessToken.value!!)
-                if (response.code() == 200) {
-                    withContext(Dispatchers.Main) {
 
-                        if (response.body()!!.size > 0) {
 
-                            postAdapter.addPosts(response.body()!!, dataModelToken.myId.value!!)
-                            emptyLabel.visibility = View.GONE
-                            postRecyclerView.visibility = View.VISIBLE
 
-                        } else {
-                            postRecyclerView.visibility = View.GONE
-                            emptyLabel.visibility = View.VISIBLE
-                        }
-                    }
-                }
-            }
+
+//            coroutine.launch {
+//                val response = ApiInstance.getApi()
+//                    .requestAllPosts(dataModelToken.accessToken.value!!)
+//                if (response.code() == 200) {
+//                    withContext(Dispatchers.Main) {
+//
+//                        if (response.body()!!.size > 0) {
+//
+//                            postAdapter.addPosts(response.body()!!, dataModelToken.myId.value!!)
+//                            emptyLabel.visibility = View.GONE
+//                            postRecyclerView.visibility = View.VISIBLE
+//
+//                        } else {
+//                            postRecyclerView.visibility = View.GONE
+//                            emptyLabel.visibility = View.VISIBLE
+//                        }
+//                    }
+//                }
+//            }
+
 
 
         }
     }
+
+
 
 
     private fun search() {
@@ -171,38 +226,42 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
         binding.apply {
 
             val search: String?
-            val searchTags: ArrayList<String>?
-            val sort: String
-            val sortValue: String
-            if (activeTags.isNotEmpty()) {
-                searchTags = ArrayList()
-                activeTags.mapTo(searchTags) {
-                    it.id
+            var searchTags: ArrayList<String>?
 
-                }
-            } else searchTags = null
-            if (searchView.query == "") search = null
-            else search = searchView.query.toString()
+
+            searchTags = ArrayList()
+
+
+            allTags.filter { it.isActive }.mapTo(searchTags) {
+                it.id
+            }
+
+            if (searchTags.isEmpty()) searchTags = null
+
+            search = if (searchView.query == "") null
+            else searchView.query.toString()
+            val sort: String 
+            val sortValue: String
             when (spinner.selectedItem.toString()) {
                 getString(R.string.Sort_date_new) -> {
-                    sortValue = SortingObject.SortValue.DESC.name
-                    sort = SortingObject.PostsSort.createdAt.name
+                    sortValue = SortingObject.SortValue.DESC.s
+                    sort = SortingObject.PostsSort.CREATED_AT.s
 
                 }
                 getString(R.string.Sort_date_old) -> {
-                    sortValue = SortingObject.SortValue.ASC.name
-                    sort = SortingObject.PostsSort.createdAt.name
+                    sortValue = SortingObject.SortValue.ASC.s
+                    sort = SortingObject.PostsSort.CREATED_AT.s
 
                 }
                 getString(R.string.Sort_view_max) -> {
 
-                    sortValue = SortingObject.SortValue.DESC.name
-                    sort = SortingObject.PostsSort.VIEWS.name
+                    sortValue = SortingObject.SortValue.DESC.s
+                    sort = SortingObject.PostsSort.VIEWS.s
                 }
                 getString(R.string.Sort_view_min) -> {
 
-                    sortValue = SortingObject.SortValue.ASC.name
-                    sort = SortingObject.PostsSort.VIEWS.name
+                    sortValue = SortingObject.SortValue.ASC.s
+                    sort = SortingObject.PostsSort.VIEWS.s
                 }
                 else -> {
                     sort = ""
@@ -211,7 +270,7 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
             }
 
             coroutine.launch {
-
+                println()
                 val searchResponse = ApiInstance.getApi().requestPostsBySearch(
                     search,
                     searchTags,
@@ -300,11 +359,7 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
     }
 
     override fun onClickTag(tag: Tag) {
-        if (activeTags.contains(tag)) activeTags.remove(tag)
-        else activeTags.add(tag)
         search()
-        println(activeTags.size)
-
     }
 
     companion object {

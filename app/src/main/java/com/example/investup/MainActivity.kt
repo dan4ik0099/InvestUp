@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.investup.dataModels.DataModelSearch
 
 import com.example.investup.dataModels.DataModelToken
 import com.example.investup.databinding.ActivityMainBinding
@@ -28,7 +29,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity(), Navigator {
     var pref: SharedPreferences? = null
     private val dataModelToken: DataModelToken by viewModels()
-
+    private val dataModelSearch: DataModelSearch by viewModels()
     private lateinit var pLauncher: ActivityResultLauncher<Array<String>>
 
 
@@ -53,6 +54,12 @@ class MainActivity : AppCompatActivity(), Navigator {
                 getString(R.string.Chat)
             )
         )
+
+
+
+        initSearchDefault()
+
+
         pref = getSharedPreferences("base", Context.MODE_PRIVATE)
         dataModelToken.accessToken.value = pref?.getString("accessToken", "-1")
 
@@ -346,6 +353,26 @@ class MainActivity : AppCompatActivity(), Navigator {
             true,
         )
     }
+
+    fun initSearchDefault(){
+         println("666")
+        dataModelSearch.searchHome.value = ""
+        dataModelSearch.tagHome.value = ArrayList()
+        dataModelSearch.sortHome.value = 0
+
+        dataModelSearch.searchHome.value = ""
+        dataModelSearch.tagHome.value = ArrayList()
+        dataModelSearch.sortHome.value = 0
+
+        dataModelSearch.searchHome.value = ""
+        dataModelSearch.tagHome.value = ArrayList()
+        dataModelSearch.sortHome.value = 0
+
+        dataModelSearch.searchHome.value = ""
+        dataModelSearch.tagHome.value = ArrayList()
+        dataModelSearch.sortHome.value = 0
+    }
+
 
 
     fun backTo() {
