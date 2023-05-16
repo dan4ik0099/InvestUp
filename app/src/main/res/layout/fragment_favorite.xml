@@ -60,6 +60,9 @@
                         android:layout_height="55dp"
 
                         android:iconifiedByDefault="false"
+                        android:queryHint="🔍"
+                        android:searchHintIcon="@null"
+                        android:searchIcon="@null"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">

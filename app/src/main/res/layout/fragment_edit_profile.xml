@@ -13,243 +13,268 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardView3"
-            android:layout_width="90dp"
-            android:layout_height="90dp" android:layout_marginTop="16dp"
-            android:elevation="4dp"
-            app:cardCornerRadius="60dp"
-            app:cardElevation="4dp"
-            app:cardMaxElevation="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/avatarChangeView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:elevation="8dp"
-                android:scaleType="fitXY"
-                tools:ignore="ContentDescription"
-                tools:src="@tools:sample/avatars"
-                tools:srcCompat="@tools:sample/backgrounds/scenic" />
-        </androidx.cardview.widget.CardView>
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardView3"
+            app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteX="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardView4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="16dp"
-                    android:elevation="4dp"
-                    app:cardBackgroundColor="@color/card_background"
-                    app:cardCornerRadius="30dp"
-                    app:cardElevation="4dp"
-                    app:cardMaxElevation="4dp"
-                    app:contentPadding="20dp">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardView3"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp"
+                        android:elevation="4dp"
+                        app:cardCornerRadius="60dp"
+                        app:cardElevation="4dp"
+                        app:cardMaxElevation="4dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:id="@+id/textView10"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/Change_data"
-                            android:textColor="@color/font"
-                            android:textSize="16sp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:id="@+id/textView2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:labelFor="@id/nameInput"
-                            android:text="@string/Hint_firstname"
-                            app:layout_constraintStart_toStartOf="@+id/nameInput"
-                            app:layout_constraintTop_toBottomOf="@+id/textView10" />
-
-                        <EditText
-                            android:id="@+id/nameInput"
-                            android:layout_width="300dp"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:importantForAutofill="no"
-                            android:inputType="textPersonName"
-                            android:minHeight="48dp"
-                            android:textColor="@color/font"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-                        <TextView
-                            android:id="@+id/textView5"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:labelFor="@id/surnameInput"
-                            android:text="@string/Hint_surname"
-                            app:layout_constraintStart_toStartOf="@+id/nameInput"
-                            app:layout_constraintTop_toBottomOf="@+id/nameInput" />
-
-                        <EditText
-                            android:id="@+id/surnameInput"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:importantForAutofill="no"
-                            android:inputType="textPersonName"
-                            android:minHeight="48dp"
-                            android:textColor="@color/font"
-                            app:layout_constraintEnd_toEndOf="@+id/nameInput"
-                            app:layout_constraintStart_toStartOf="@+id/nameInput"
-                            app:layout_constraintTop_toBottomOf="@+id/textView5" />
-
-                        <Button
-                            android:id="@+id/saveDataButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/theme"
+                        <ImageView
+                            android:id="@+id/avatarChangeView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:elevation="8dp"
-                            android:letterSpacing="0.03"
-                            android:text="@string/Save"
-                            android:textAllCaps="false"
-                            android:textSize="16sp"
-                            app:cornerRadius="20dp"
-                            app:layout_constraintEnd_toEndOf="@+id/surnameInput"
-                            app:layout_constraintStart_toStartOf="@+id/surnameInput"
-                            app:layout_constraintTop_toBottomOf="@+id/surnameInput"
-                            tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                            android:scaleType="fitXY"
+                            tools:ignore="ContentDescription"
+                            tools:src="@tools:sample/avatars"
+                            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+                    </androidx.cardview.widget.CardView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </androidx.cardview.widget.CardView>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:padding="20dp">
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="10dp"
-                    android:elevation="4dp"
-                    app:cardBackgroundColor="@color/card_background"
-                    app:cardCornerRadius="30dp"
-                    app:cardElevation="4dp"
-                    app:cardMaxElevation="4dp"
-                    app:contentPadding="20dp">
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:elevation="4dp"
+                        app:cardBackgroundColor="@color/card_background"
+                        app:cardCornerRadius="30dp"
+                        app:cardElevation="4dp"
+                        app:cardMaxElevation="4dp"
+                        app:contentPadding="20dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-                        <TextView
-                            android:id="@+id/textView11"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/Change_password"
-                            android:textColor="@color/font"
-                            android:textSize="16sp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            <TextView
+                                android:id="@+id/textView10"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/Change_data"
+                                android:textColor="@color/font"
+                                android:textSize="16sp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
 
-                        <TextView
-                            android:id="@+id/textView6"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:labelFor="@id/newPasswordInput"
-                            android:text="@string/Hint_new_password"
-                            app:layout_constraintStart_toStartOf="@+id/textView8"
-                            app:layout_constraintTop_toBottomOf="@+id/oldPasswordInput" />
+                            <TextView
+                                android:id="@+id/textView2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:labelFor="@id/nameInput"
+                                android:text="@string/Hint_firstname"
+                                app:layout_constraintStart_toStartOf="@+id/nameInput"
+                                app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
-                        <TextView
-                            android:id="@+id/textView7"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:labelFor="@id/repeatPasswordInput"
-                            android:text="@string/Hint_repeat_password"
-                            app:layout_constraintStart_toStartOf="@+id/textView8"
-                            app:layout_constraintTop_toBottomOf="@+id/newPasswordInput" />
+                            <EditText
+                                android:id="@+id/nameInput"
+                                android:layout_width="300dp"
+                                android:layout_height="wrap_content"
+                                android:ems="10"
+                                android:importantForAutofill="no"
+                                android:inputType="textPersonName"
+                                android:minHeight="48dp"
+                                android:textColor="@color/font"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-                        <EditText
-                            android:id="@+id/oldPasswordInput"
-                            android:layout_width="300dp"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:importantForAutofill="no"
-                            android:inputType="textPassword"
-                            android:minHeight="48dp"
-                            app:layout_constraintStart_toStartOf="@+id/textView8"
-                            app:layout_constraintTop_toBottomOf="@+id/textView8" />
+                            <TextView
+                                android:id="@+id/textView5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:labelFor="@id/surnameInput"
+                                android:text="@string/Hint_surname"
+                                app:layout_constraintStart_toStartOf="@+id/nameInput"
+                                app:layout_constraintTop_toBottomOf="@+id/nameInput" />
 
-                        <EditText
-                            android:id="@+id/newPasswordInput"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:importantForAutofill="no"
-                            android:inputType="textPassword"
-                            android:minHeight="48dp"
-                            app:layout_constraintEnd_toEndOf="@+id/oldPasswordInput"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintStart_toStartOf="@+id/textView8"
-                            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+                            <EditText
+                                android:id="@+id/surnameInput"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:ems="10"
+                                android:importantForAutofill="no"
+                                android:inputType="textPersonName"
+                                android:minHeight="48dp"
+                                android:textColor="@color/font"
+                                app:layout_constraintEnd_toEndOf="@+id/nameInput"
+                                app:layout_constraintStart_toStartOf="@+id/nameInput"
+                                app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
-                        <EditText
-                            android:id="@+id/repeatPasswordInput"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:importantForAutofill="no"
-                            android:inputType="textPassword"
-                            android:minHeight="48dp"
-                            app:layout_constraintEnd_toEndOf="@+id/newPasswordInput"
-                            app:layout_constraintStart_toStartOf="@+id/textView8"
-                            app:layout_constraintTop_toBottomOf="@+id/textView7" />
+                            <Button
+                                android:id="@+id/saveDataButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/theme"
+                                android:elevation="8dp"
+                                android:letterSpacing="0.03"
+                                android:text="@string/Save"
+                                android:textAllCaps="false"
+                                android:textSize="16sp"
+                                app:cornerRadius="20dp"
+                                app:layout_constraintEnd_toEndOf="@+id/surnameInput"
+                                app:layout_constraintStart_toStartOf="@+id/surnameInput"
+                                app:layout_constraintTop_toBottomOf="@+id/surnameInput"
+                                tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                        <TextView
-                            android:id="@+id/textView8"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:labelFor="@id/oldPasswordInput"
-                            android:text="@string/Hint_old_password"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/textView11" />
+                    </androidx.cardview.widget.CardView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                        <Button
-                            android:id="@+id/savePasswordButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/theme"
-                            android:elevation="8dp"
-                            android:letterSpacing="0.03"
-                            android:text="@string/Save"
-                            android:textAllCaps="false"
-                            android:textSize="16sp"
-                            app:cornerRadius="20dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/repeatPasswordInput"
-                            tools:ignore="TextContrastCheck" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </androidx.cardview.widget.CardView>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:padding="20dp">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp"
+                        android:elevation="4dp"
+                        app:cardBackgroundColor="@color/card_background"
+                        app:cardCornerRadius="30dp"
+                        app:cardElevation="4dp"
+                        app:cardMaxElevation="4dp"
+                        app:contentPadding="20dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/textView11"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/Change_password"
+                                android:textColor="@color/font"
+                                android:textSize="16sp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/textView6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:labelFor="@id/newPasswordInput"
+                                android:text="@string/Hint_new_password"
+                                app:layout_constraintStart_toStartOf="@+id/textView8"
+                                app:layout_constraintTop_toBottomOf="@+id/oldPasswordInput" />
+
+                            <TextView
+                                android:id="@+id/textView7"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:labelFor="@id/repeatPasswordInput"
+                                android:text="@string/Hint_repeat_password"
+                                app:layout_constraintStart_toStartOf="@+id/textView8"
+                                app:layout_constraintTop_toBottomOf="@+id/newPasswordInput" />
+
+                            <EditText
+                                android:id="@+id/oldPasswordInput"
+                                android:layout_width="300dp"
+                                android:layout_height="wrap_content"
+                                android:ems="10"
+                                android:importantForAutofill="no"
+                                android:inputType="textPassword"
+                                android:minHeight="48dp"
+                                app:layout_constraintStart_toStartOf="@+id/textView8"
+                                app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+                            <EditText
+                                android:id="@+id/newPasswordInput"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:ems="10"
+                                android:importantForAutofill="no"
+                                android:inputType="textPassword"
+                                android:minHeight="48dp"
+                                app:layout_constraintEnd_toEndOf="@+id/oldPasswordInput"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintStart_toStartOf="@+id/textView8"
+                                app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+                            <EditText
+                                android:id="@+id/repeatPasswordInput"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:ems="10"
+                                android:importantForAutofill="no"
+                                android:inputType="textPassword"
+                                android:minHeight="48dp"
+                                app:layout_constraintEnd_toEndOf="@+id/newPasswordInput"
+                                app:layout_constraintStart_toStartOf="@+id/textView8"
+                                app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+                            <TextView
+                                android:id="@+id/textView8"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:labelFor="@id/oldPasswordInput"
+                                android:text="@string/Hint_old_password"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+                            <Button
+                                android:id="@+id/savePasswordButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/theme"
+                                android:elevation="8dp"
+                                android:letterSpacing="0.03"
+                                android:text="@string/Save"
+                                android:textAllCaps="false"
+                                android:textSize="16sp"
+                                app:cornerRadius="20dp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/repeatPasswordInput"
+                                tools:ignore="TextContrastCheck" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.cardview.widget.CardView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </LinearLayout>
         </ScrollView>
 

@@ -126,6 +126,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:iconifiedByDefault="false"
+                    android:queryHint="🔍"
+                    android:searchHintIcon="@null"
+                    android:searchIcon="@null"
                     app:layout_constraintEnd_toEndOf="@+id/addPostButton"
                     app:layout_constraintStart_toStartOf="@+id/textView9"
                     app:layout_constraintTop_toBottomOf="@+id/textView9">

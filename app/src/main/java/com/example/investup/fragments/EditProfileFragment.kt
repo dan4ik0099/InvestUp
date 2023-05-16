@@ -85,7 +85,6 @@ class EditProfileFragment : Fragment() {
                     if (it.resultCode == RESULT_OK) {
                         val res: Intent? = it.data
 
-                        avatarChangeView.setImageURI(res?.data)
                         filePart = buildMultipart(
                             res?.data!!,
                             requireContext(),
@@ -99,6 +98,9 @@ class EditProfileFragment : Fragment() {
                                     filePart
 
                                 )
+                            withContext(Dispatchers.Main){
+                                if (response.code()==200) avatarChangeView.setImageURI(res?.data)
+                            }
                             println(response.message())
 
                         }
@@ -122,19 +124,19 @@ class EditProfileFragment : Fragment() {
                         READ_EXTERNAL_STORAGE
                     ) != PackageManager.PERMISSION_GRANTED
                 ) {
-                    println(1)
+
                     ActivityCompat.requestPermissions(
                         requireActivity(),
                         arrayOf(READ_EXTERNAL_STORAGE),
                         REQUEST_CODE_WRITE_EXTERNAL_STORAGE
                     )
                 } else {
-                    println(2)
+
                     havePermission = true
 
                 }
                 if (havePermission) {
-                    println(3)
+
                     val i = Intent(Intent.ACTION_GET_CONTENT)
                     i.type = "image/*"
                     launcher!!.launch(i)
@@ -164,7 +166,7 @@ class EditProfileFragment : Fragment() {
                 }
             }
             savePasswordButton.setOnClickListener {
-                if (newPasswordInput.text == repeatPasswordInput.text) {
+                if (newPasswordInput.text.toString() == repeatPasswordInput.text.toString()) {
 
                     coroutine.launch {
                         val response = ApiInstance.getApi().requestChangePassword(
@@ -174,18 +176,24 @@ class EditProfileFragment : Fragment() {
                                 newPasswordInput.text.toString()
                             )
                         )
-                        if (response.code() == 200) {
+                        withContext(Dispatchers.Main) {
 
-                            withContext(Dispatchers.Main) {
+                            if (response.code() == 200) {
+
                                 Toast.makeText(
                                     requireContext(),
                                     getString(R.string.Toast_saved_password),
                                     Toast.LENGTH_SHORT
                                 ).show()
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.Unexpected_error),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                     }
-
                 }
 
             }

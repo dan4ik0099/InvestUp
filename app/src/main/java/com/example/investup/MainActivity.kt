@@ -305,8 +305,7 @@ class MainActivity : AppCompatActivity(), Navigator {
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         ConstNavigation.titleWithoutArrow.forEach {
-            println("sasasdasd")
-            println(it)
+
             println(supportActionBar?.title.toString())
             if (supportActionBar?.title.toString() == it) supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
@@ -360,17 +359,17 @@ class MainActivity : AppCompatActivity(), Navigator {
         dataModelSearch.tagHome.value = ArrayList()
         dataModelSearch.sortHome.value = 0
 
-        dataModelSearch.searchHome.value = ""
-        dataModelSearch.tagHome.value = ArrayList()
-        dataModelSearch.sortHome.value = 0
+        dataModelSearch.searchFavorite.value = ""
+        dataModelSearch.tagFavorite.value = ArrayList()
+        dataModelSearch.sortFavorite.value = 0
 
-        dataModelSearch.searchHome.value = ""
-        dataModelSearch.tagHome.value = ArrayList()
-        dataModelSearch.sortHome.value = 0
+        dataModelSearch.searchProfile.value = ""
+        dataModelSearch.tagProfile.value = ArrayList()
+        dataModelSearch.sortProfile.value = 0
 
-        dataModelSearch.searchHome.value = ""
-        dataModelSearch.tagHome.value = ArrayList()
-        dataModelSearch.sortHome.value = 0
+        dataModelSearch.searchUserProfile.value = ""
+        dataModelSearch.tagUserProfile.value = ArrayList()
+        dataModelSearch.sortUserProfile.value = 0
     }
 
 

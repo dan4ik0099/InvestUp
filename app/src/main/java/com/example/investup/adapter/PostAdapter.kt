@@ -31,7 +31,8 @@ class PostAdapter(val listener: Listener) : RecyclerView.Adapter<PostAdapter.Pos
 
                 Picasso.get().load(user.avatar).into(userProfileImageView)
                 nameSurnameLabel.text = ("${user.firstName} ${user.lastName}")
-                val formatedDate = createdAt.substringBefore("T")
+                val formatedDate = createdAt.replace("T", "/").substring(0, 16)
+
                 dateLabel.text = formatedDate
                 titleLabel.text = title
                 viewCountLabel.text = views.toString()

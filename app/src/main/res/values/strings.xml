@@ -13,8 +13,8 @@
     <string name="Hint_old_password">Старый пароль</string>
     <string name="Hint_new_password">Новый пароль</string>
     <string name="Hint_repeat_password">Повторение пароля</string>
-    <string name="Change_password">Сменить пароль</string>
-    <string name="Change_data">Сменить данные</string>
+    <string name="Change_password">Изменить пароль</string>
+    <string name="Change_data">Изменить данные</string>
     <string name="Hint_title">Название</string>
     <string name="Hint_short_description">Короткое описание</string>
     <string name="Hint_full_description">Описание идеи</string>

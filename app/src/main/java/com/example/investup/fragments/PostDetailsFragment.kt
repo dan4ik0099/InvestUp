@@ -112,7 +112,7 @@ class PostDetailsFragment : Fragment(), CommentAdapter.Listener {
 
                             Picasso.get().load(it.user.avatar).into(userProfileImageView)
                             nameSurnameLabel.text = ("${it.user.firstName} ${it.user.lastName}")
-                            val formatedDate = it.createdAt.substringBefore("T")
+                            val formatedDate = it.createdAt.replace("T", "/").substring(0, 16)
                             dateLabel.text = formatedDate
                             titleLabel.text = it.title
                             shortDescriptionLabel.text = it.shortDescription

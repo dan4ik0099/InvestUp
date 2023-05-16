@@ -155,7 +155,7 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
                     id: Long
                 ) {
 
-                    println(isFirstTime)
+
                     if (isFirstTime) isFirstTime = false
                     else search()
 
@@ -173,7 +173,7 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
 
             searchView.setOnQueryTextListener(object : OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    println("brrrrrr1")
+
                     search()
                     return true
                 }
@@ -181,39 +181,12 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
 
                 override fun onQueryTextChange(newText: String?): Boolean {
                     if (searchView.query.isEmpty()) {search()
-                        println("brrrrrr2")
+
                     }
                     return true
                 }
 
             })
-            println("brrrrrr3")
-
-
-
-
-
-//            coroutine.launch {
-//                val response = ApiInstance.getApi()
-//                    .requestAllPosts(dataModelToken.accessToken.value!!)
-//                if (response.code() == 200) {
-//                    withContext(Dispatchers.Main) {
-//
-//                        if (response.body()!!.size > 0) {
-//
-//                            postAdapter.addPosts(response.body()!!, dataModelToken.myId.value!!)
-//                            emptyLabel.visibility = View.GONE
-//                            postRecyclerView.visibility = View.VISIBLE
-//
-//                        } else {
-//                            postRecyclerView.visibility = View.GONE
-//                            emptyLabel.visibility = View.VISIBLE
-//                        }
-//                    }
-//                }
-//            }
-
-
 
         }
     }
@@ -228,9 +201,7 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
             val search: String?
             var searchTags: ArrayList<String>?
 
-
             searchTags = ArrayList()
-
 
             allTags.filter { it.isActive }.mapTo(searchTags) {
                 it.id

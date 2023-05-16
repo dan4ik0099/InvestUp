@@ -57,7 +57,7 @@ class RegisterFragment : Fragment() {
                         if (response.code() == 200) {
 
                             val userToken = response.body()
-                            println("userToken = $userToken")
+
                             withContext(Dispatchers.Main) {
                                 userToken?.apply {
                                     dataModelToken.accessToken.value = accessToken

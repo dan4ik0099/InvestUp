@@ -34,7 +34,7 @@ class CommentAdapter(val listener: Listener) :
 
                 Picasso.get().load(user.avatar).into(userAvatarImage)
                 nameSurnameLabel.text = ("${user.firstName} ${user.lastName}")
-                val formatedDate = createdAt.substringBefore("T")
+                val formatedDate = createdAt.replace("T", "/").substring(0, 16)
                 dateLabel.text = formatedDate
                 textLabel.text = text
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
