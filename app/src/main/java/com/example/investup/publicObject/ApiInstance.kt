@@ -1,12 +1,11 @@
 package com.example.investup.publicObject
 
-import com.example.investup.retrofit.UserApi
-import okhttp3.MultipartBody
+import com.example.investup.other.UserApi
+
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 object ApiInstance {
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
@@ -29,4 +28,10 @@ object ApiInstance {
     fun getApi(): UserApi {
         return userApi
     }
+
+
+
+
+
+
 }

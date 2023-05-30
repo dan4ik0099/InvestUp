@@ -14,6 +14,8 @@ import com.example.investup.dataModels.DataModelToken
 
 import com.example.investup.databinding.FragmentLoginBinding
 import com.example.investup.navigationInterface.navigator
+import com.example.investup.publicObject.SocketEvents
+import com.example.investup.publicObject.SocketSingleton
 import com.example.investup.retrofit.requestModel.UserAuthRequest
 import kotlinx.coroutines.*
 import okhttp3.internal.wait
@@ -52,30 +54,33 @@ class LoginFragment : Fragment() {
                         )
                     )
 
+                    if (response.code() == 200) {
+                        val responseUser =
+                            ApiInstance.getApi()
+                                .requestInfoMe("Bearer ${response.body()!!.accessToken}")
+                        SocketSingleton.connectSocket("Bearer ${response.body()!!.accessToken}")
+                        SocketSingleton.sendConnection(response.body()!!.accessToken, SocketEvents.CONNECTION.s)
+                        withContext(Dispatchers.Main) {
+                            if (responseUser.code() == 200) {
+                                dataModelToken.accessToken.value =
+                                    "Bearer ${response.body()!!.accessToken}"
+                                dataModelToken.refreshToken.value = response.body()!!.refreshToken
 
-                    val responseUser =
-                        ApiInstance.getApi().requestInfoMe("Bearer ${response.body()!!.accessToken}")
+                                dataModelToken.myId.value = responseUser.body()!!.id
 
-                    withContext(Dispatchers.Main) {
-                        if (responseUser.code() == 200) {
-                            dataModelToken.accessToken.value =
-                                "Bearer ${response.body()!!.accessToken}"
-                            dataModelToken.refreshToken.value = response.body()!!.refreshToken
+                                SocketSingleton.sendConnection(response.body()!!.accessToken, SocketEvents.CONNECTION.s)
+                                navigator().navOn()
+                                navigator().navAfterLoginRegister()
 
-                            dataModelToken.myId.value = responseUser.body()!!.id
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    R.string.Authorize_error,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
 
-                            navigator().navOn()
-                            navigator().navAfterLoginRegister()
-
-                        } else {
-                            Toast.makeText(
-                                requireContext(),
-                                R.string.Authorize_error,
-                                Toast.LENGTH_SHORT
-                            ).show()
                         }
-
-
                     }
 
                 }

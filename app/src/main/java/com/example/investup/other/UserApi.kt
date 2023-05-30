@@ -1,4 +1,4 @@
-package com.example.investup.retrofit
+package com.example.investup.other
 
 import com.example.investup.retrofit.dataClass.*
 import com.example.investup.retrofit.dataClass.Tag
@@ -48,6 +48,16 @@ interface UserApi {
         @Header("Authorization") accessToken: String
     ): Response<Post>
 
+
+    @Headers("Content-Type: application/json")
+    @PUT("/posts/{id}")
+    suspend fun changePostById(
+        @Path("id") id: String,
+        @Body postEditRequest: PostEditRequest,
+        @Header("Authorization") accessToken: String
+
+    ): Response<ResponseBody>
+
     @Headers("Content-Type: application/json")
     @DELETE("/posts/{id}")
     suspend fun deletePostById(
@@ -61,6 +71,46 @@ interface UserApi {
         @Path("id") id: String,
         @Header("Authorization") accessToken: String
     ): Response<ArrayList<Post>>
+
+    @Headers("Content-Type: application/json")
+    @POST("/dialogs/create")
+    suspend fun createDialog(
+        @Header("Authorization") accessToken: String,
+        @Body dialogCreateRequest: DialogCreateRequest
+    ): Response<DialogInfo>
+
+
+
+    @Headers("Content-Type: application/json")
+    @POST("/complaints/user")
+    suspend fun createReportUser(
+        @Header("Authorization") accessToken: String,
+        @Body userReportRequest: UserReportRequest
+    ): Response<ResponseBody>
+    @Headers("Content-Type: application/json")
+    @POST("/complaints/post")
+    suspend fun createReportPost(
+        @Header("Authorization") accessToken: String,
+        @Body postReportRequest: PostReportRequest
+    ): Response<ResponseBody>
+
+
+
+    @Headers("Content-Type: application/json")
+    @GET("/dialogs")
+    suspend fun requestAllDialogs(
+        @Header("Authorization") accessToken: String
+    ): Response<ArrayList<Dialog>>
+
+
+    @Headers("Content-Type: application/json")
+    @GET("/dialogs/{id}")
+    suspend fun requestDialogById(
+        @Path("id") id: String,
+        @Header("Authorization") accessToken: String
+    ): Response<DialogInfo>
+
+
 
     @Headers("Content-Type: application/json")
     @DELETE("/posts/comment/{id}")
@@ -92,7 +142,7 @@ interface UserApi {
     suspend fun requestChangeNameAndLastName(
         @Header("Authorization") accessToken: String,
         @Body userChangeNameRequest: UserChangeNameRequest
-    ): Response<Void>
+    ): Response<ResponseBody>
 
     @Headers("Content-Type: application/json")
     @GET("/posts/favorites")
@@ -171,6 +221,10 @@ interface UserApi {
         @Part("tags") tags: RequestBody,
         @Part video: MultipartBody.Part?
     ): Response<ResponseBody>
+
+
+
+
 
 
 }

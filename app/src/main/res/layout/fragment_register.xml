@@ -14,17 +14,30 @@
         android:background="#FFFFFF"
         android:backgroundTint="#F4F4F4">
 
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/register_bg" />
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="44dp"
             android:fontFamily="sans-serif"
             android:text="@string/Register"
             android:textColor="@color/font"
             android:textSize="34sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/loginInput"
             app:layout_constraintEnd_toEndOf="@+id/nameInput"
+            app:layout_constraintHorizontal_bias="0.488"
             app:layout_constraintStart_toStartOf="@+id/nameInput" />
 
         <Button
@@ -32,12 +45,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:backgroundTint="@color/theme"
+            android:backgroundTint="@color/buttonColorLightGreen"
             android:elevation="8dp"
             android:letterSpacing="0.03"
             android:text="@string/Create_account"
             android:textAllCaps="false"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="16sp"
             app:cornerRadius="20dp"
             app:layout_constraintEnd_toEndOf="@+id/surnameInput"
@@ -47,62 +60,71 @@
         <EditText
             android:id="@+id/surnameInput"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginTop="16dp"
+            android:autofillHints=""
+            android:background="@drawable/input_shape"
             android:ems="10"
             android:hint="@string/Hint_surname"
             android:inputType="textPersonName"
             android:minHeight="48dp"
+            android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="@+id/nameInput"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/nameInput"
-            app:layout_constraintTop_toBottomOf="@+id/nameInput"
-            android:autofillHints="" />
+            app:layout_constraintTop_toBottomOf="@+id/nameInput" />
 
         <EditText
             android:id="@+id/nameInput"
             android:layout_width="250dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
+            android:autofillHints=""
+            android:background="@drawable/input_shape"
             android:ems="10"
             android:hint="@string/Hint_firstname"
             android:inputType="textPersonName"
             android:minHeight="48dp"
+            android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.503"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.411"
-            android:autofillHints="" />
+            app:layout_constraintVertical_bias="0.475" />
 
         <EditText
             android:id="@+id/passwordInput"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginTop="16dp"
+            android:autofillHints=""
+            android:background="@drawable/input_shape"
             android:ems="10"
             android:hint="@string/Hint_password"
             android:inputType="textPassword"
             android:minHeight="48dp"
+            android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="@+id/nameInput"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/nameInput"
-            app:layout_constraintTop_toBottomOf="@+id/surnameInput"
-            android:autofillHints="" />
+            app:layout_constraintTop_toBottomOf="@+id/surnameInput" />
 
         <EditText
             android:id="@+id/loginInput"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginBottom="16dp"
+            android:autofillHints=""
+            android:background="@drawable/input_shape"
             android:ems="10"
             android:hint="@string/Hint_login"
             android:inputType="textPersonName"
             android:minHeight="48dp"
+            android:textAlignment="center"
             app:layout_constraintBottom_toTopOf="@+id/nameInput"
             app:layout_constraintEnd_toEndOf="@+id/nameInput"
             app:layout_constraintHorizontal_bias="0.502"
-            app:layout_constraintStart_toStartOf="@+id/nameInput"
-            android:autofillHints="" />
+            app:layout_constraintStart_toStartOf="@+id/nameInput" />
 
         <TextView
             android:id="@+id/toLoginButton"

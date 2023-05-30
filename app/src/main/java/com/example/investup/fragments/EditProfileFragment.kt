@@ -22,7 +22,7 @@ import androidx.fragment.app.activityViewModels
 
 import com.example.investup.R
 import com.example.investup.publicObject.ApiInstance
-import com.example.investup.UriHelper
+import com.example.investup.other.UriHelper
 import com.example.investup.dataModels.DataModelToken
 import com.example.investup.databinding.FragmentEditProfileBinding
 import com.example.investup.retrofit.requestModel.UserChangeNameRequest

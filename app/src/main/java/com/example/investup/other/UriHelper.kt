@@ -1,4 +1,4 @@
-package com.example.investup
+package com.example.investup.other
 import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor

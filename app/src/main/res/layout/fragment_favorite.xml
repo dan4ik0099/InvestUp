@@ -7,6 +7,14 @@
 
     tools:context=".fragments.FavoriteFragment">
 
+    <ImageView
+        android:id="@+id/imageView12"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/favorite_bg"
+        tools:src="@tools:sample/avatars" />
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/gg"
         android:layout_width="match_parent"
@@ -32,8 +40,9 @@
                         android:id="@+id/spinner"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginEnd="4dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
                         android:contentDescription="@string/Add_to_favorite"
                         android:minHeight="48dp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -57,10 +66,12 @@
                     <SearchView
                         android:id="@+id/searchView"
                         android:layout_width="0dp"
-                        android:layout_height="55dp"
+                        android:layout_height="40dp"
 
+                        android:layout_marginTop="8dp"
                         android:iconifiedByDefault="false"
-                        android:queryHint="🔍"
+                        android:queryBackground="@drawable/input_shape"
+                        android:queryHint="Поиск"
                         android:searchHintIcon="@null"
                         android:searchIcon="@null"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -75,6 +86,7 @@
                     android:id="@+id/postRecyclerView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:nestedScrollingEnabled="true"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

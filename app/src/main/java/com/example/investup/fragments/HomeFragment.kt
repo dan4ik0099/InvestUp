@@ -22,6 +22,8 @@ import com.example.investup.dataModels.DataModelUser
 import com.example.investup.databinding.FragmentHomeBinding
 import com.example.investup.navigationInterface.navigator
 import com.example.investup.publicObject.ApiInstance
+import com.example.investup.publicObject.SocketEvents
+import com.example.investup.publicObject.SocketSingleton
 import com.example.investup.publicObject.SortingObject
 import com.example.investup.retrofit.dataClass.Post
 import com.example.investup.retrofit.dataClass.Tag
@@ -39,7 +41,7 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
     private val tagAdapter = TagAdapter(this)
     private val postAdapter = PostAdapter(this)
     private var allTags = ArrayList<Tag>()
-    private val activeTags = ArrayList<Tag>()
+
     lateinit var coroutine: CoroutineScope
     private val dataModeLPost: DataModeLPost by activityViewModels()
     private val dataModelToken: DataModelToken by activityViewModels()
@@ -132,8 +134,7 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
                     filteredTags.forEach{ tag->
                         allTags.find { tag == it.id}!!.isActive = true
                     }
-                    println(111111111)
-                    println(allTags.size)
+
 
 
                     withContext(Dispatchers.Main) {
@@ -315,11 +316,11 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
     }
 
     override fun onClickDeleteButton(post: Post) {
-        TODO("Not yet implemented")
+
     }
 
     override fun onClickEditButton(post: Post) {
-        TODO("Not yet implemented")
+
     }
 
     override fun onClickProfileButton(id: String) {
@@ -331,6 +332,7 @@ class HomeFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
 
     override fun onClickTag(tag: Tag) {
         search()
+
     }
 
     companion object {

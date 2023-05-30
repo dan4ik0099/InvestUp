@@ -1,14 +1,14 @@
 package com.example.investup.fragments
 
+import android.app.AlertDialog
+import android.content.DialogInterface
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.SearchView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +25,8 @@ import com.example.investup.publicObject.ApiInstance
 import com.example.investup.publicObject.SortingObject
 import com.example.investup.retrofit.dataClass.Post
 import com.example.investup.retrofit.dataClass.Tag
+import com.example.investup.retrofit.requestModel.DialogCreateRequest
+import com.example.investup.retrofit.requestModel.UserReportRequest
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +35,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 
-class UserProfileFragment : Fragment(), PostAdapter.Listener,TagAdapter.Listener {
+class UserProfileFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
 
     lateinit var coroutine: CoroutineScope
     lateinit var binding: FragmentUserProfileBinding
@@ -65,10 +67,6 @@ class UserProfileFragment : Fragment(), PostAdapter.Listener,TagAdapter.Listener
         }
         super.onStop()
     }
-
-
-
-
 
 
     override fun onResume() {
@@ -105,7 +103,7 @@ class UserProfileFragment : Fragment(), PostAdapter.Listener,TagAdapter.Listener
 
                     if (response.code() == 200) {
                         response.body()?.apply {
-
+                            println("shiii" + response.body()!!.id)
 
                             nameSurNameText.text = ("${firstName} ${lastName}")
                             loginText.text = email
@@ -158,9 +156,10 @@ class UserProfileFragment : Fragment(), PostAdapter.Listener,TagAdapter.Listener
 
 
                     val filteredTags = ArrayList<String>()
-                    dataModelSearch.tagUserProfile.value!!.filter { it.isActive }.mapTo(filteredTags) {
-                        it.id
-                    }
+                    dataModelSearch.tagUserProfile.value!!.filter { it.isActive }
+                        .mapTo(filteredTags) {
+                            it.id
+                        }
 
                     allTags = response.body()!!
 
@@ -223,6 +222,93 @@ class UserProfileFragment : Fragment(), PostAdapter.Listener,TagAdapter.Listener
                 }
 
             })
+
+            reportButton.setOnClickListener{
+                val alertDialogBuilder = AlertDialog.Builder(requireContext())
+                alertDialogBuilder.setTitle(getString(R.string.Write_about_report_user))
+
+
+                val input = EditText(requireContext())
+                input.hint = getString(R.string.Description_report)
+                input.setText("")
+                input.setTextColor(Color.BLACK)
+                alertDialogBuilder.setView(input)
+
+
+                alertDialogBuilder.setPositiveButton(getString(R.string.Send)) { dialog: DialogInterface, which: Int ->
+                    if (input.text.isNotEmpty()) {
+                        coroutine.launch {
+                            val response = ApiInstance.getApi().createReportUser(
+                                dataModelToken.accessToken.value!!,
+                                UserReportRequest(input.text.toString(), dataModelUser.id.value!!)
+                            )
+                            withContext(Dispatchers.Main) {
+                                if (response.code() == 200) {
+                                    Toast.makeText(context, getString(R.string.Report_success), Toast.LENGTH_SHORT).show()
+
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+
+                alertDialogBuilder.setNegativeButton(getString(R.string.Cancel)) { dialog: DialogInterface, which: Int ->
+                    dialog.cancel()
+                }
+
+
+                val alertDialog = alertDialogBuilder.create()
+                alertDialog.show()
+            }
+
+
+
+            messageButton.setOnClickListener {
+
+
+                val alertDialogBuilder = AlertDialog.Builder(requireContext())
+                alertDialogBuilder.setTitle(getString(R.string.Write_message_to_user))
+
+
+                val input = EditText(requireContext())
+                input.hint = getString(R.string.Message_)
+                input.setText("")
+                input.setTextColor(Color.BLACK)
+                alertDialogBuilder.setView(input)
+
+
+                alertDialogBuilder.setPositiveButton(getString(R.string.Send)) { dialog: DialogInterface, which: Int ->
+                    if (input.text.isNotEmpty()) {
+                        coroutine.launch {
+                            val response = ApiInstance.getApi().createDialog(
+                                dataModelToken.accessToken.value!!,
+                                DialogCreateRequest(input.text.toString(), dataModelUser.id.value!!)
+                            )
+                            withContext(Dispatchers.Main) {
+                                if (response.code() == 200) {
+                                    dataModelUser.dialogId.value = response.body()!!.id
+                                    navigator().navToDialogUser()
+
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+
+                alertDialogBuilder.setNegativeButton(getString(R.string.Cancel)) { dialog: DialogInterface, which: Int ->
+                    dialog.cancel()
+                }
+
+
+                val alertDialog = alertDialogBuilder.create()
+                alertDialog.show()
+
+
+            }
 
         }
 
@@ -366,7 +452,6 @@ class UserProfileFragment : Fragment(), PostAdapter.Listener,TagAdapter.Listener
 
         search()
     }
-
 
 
     companion object {

@@ -60,11 +60,7 @@ class RegisterFragment : Fragment() {
 
                             withContext(Dispatchers.Main) {
                                 userToken?.apply {
-                                    dataModelToken.accessToken.value = accessToken
-                                    dataModelToken.refreshToken.value = refreshToken
-                                    navigator().navToHome()
-                                    navigator().navOn()
-                                    navigator().navAfterLoginRegister()
+                                    navigator().goToLogin()
                                 }
                             }
 

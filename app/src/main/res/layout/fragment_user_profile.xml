@@ -9,6 +9,14 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+    <ImageView
+        android:id="@+id/imageView11"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/user_profile_bg"
+        tools:src="@tools:sample/avatars" />
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
@@ -33,10 +41,10 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="16dp"
                     android:backgroundTint="@color/card_background"
-                    android:elevation="4dp"
+                    android:elevation="0dp"
                     app:cardCornerRadius="30dp"
-                    app:cardElevation="4dp"
-                    app:cardMaxElevation="4dp"
+                    app:cardElevation="0dp"
+                    app:cardMaxElevation="0dp"
                     app:contentPadding="15dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -71,7 +79,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
-                            android:layout_marginTop="8dp"
                             android:textColor="@color/font"
                             app:layout_constraintStart_toEndOf="@+id/cardView"
                             app:layout_constraintTop_toTopOf="@+id/cardView" />
@@ -80,20 +87,20 @@
                             android:id="@+id/loginText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
                             android:textColor="@color/black"
-                            app:layout_constraintStart_toStartOf="@+id/nameSurNameText"
-                            app:layout_constraintTop_toBottomOf="@+id/nameSurNameText" />
+                            app:layout_constraintBottom_toBottomOf="@+id/cardView"
+                            app:layout_constraintStart_toStartOf="@+id/nameSurNameText" />
 
                         <Button
                             android:id="@+id/messageButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/green"
+                            android:backgroundTint="@color/buttonColorLightGreen"
                             android:elevation="8dp"
                             android:letterSpacing="0.03"
                             android:text="@string/Message"
                             android:textAllCaps="false"
+                            android:textColor="@color/black"
                             android:textSize="16sp"
                             app:cornerRadius="20dp"
                             app:layout_constraintBottom_toBottomOf="@+id/cardView"
@@ -113,17 +120,16 @@
                 <SearchView
                     android:id="@+id/searchView"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_height="40dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
                     android:iconifiedByDefault="false"
-                    android:queryHint="🔍"
+                    android:queryBackground="@drawable/input_shape"
+                    android:queryHint="Поиск..."
                     android:searchHintIcon="@null"
                     android:searchIcon="@null"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView9">
+                    app:layout_constraintTop_toBottomOf="@+id/reportButton">
 
                 </SearchView>
 
@@ -131,11 +137,12 @@
                     android:id="@+id/textView9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="16dp"
                     android:text="@string/Users_post"
                     android:textColor="#000000"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/reportButton"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -143,7 +150,9 @@
                     android:id="@+id/spinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:minHeight="48dp"
                     app:layout_constraintEnd_toEndOf="@+id/searchView"
                     app:layout_constraintStart_toStartOf="@+id/searchView"
@@ -153,9 +162,26 @@
                     android:id="@+id/tagsRecyclerView"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toEndOf="@+id/searchView"
                     app:layout_constraintStart_toStartOf="@+id/searchView"
                     app:layout_constraintTop_toBottomOf="@+id/spinner" />
+
+                <Button
+                    android:id="@+id/reportButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:backgroundTint="@color/negative"
+                    android:letterSpacing="0.03"
+                    android:text="@string/Report"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:cornerRadius="100dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -172,6 +198,7 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
                 <TextView
                     android:id="@+id/emptyLabel"
                     android:layout_width="wrap_content"

@@ -1,6 +1,7 @@
 package com.example.investup.adapter
 
 
+import android.graphics.Color
 import android.graphics.text.LineBreaker
 import android.os.Build
 import android.view.LayoutInflater
@@ -48,7 +49,10 @@ class PostAdapter(val listener: Listener) : RecyclerView.Adapter<PostAdapter.Pos
                 profileButton.setOnClickListener{
                     listener.onClickProfileButton(user.id)
                 }
-                if (isFavorite) favoriteButton.setText(R.string.Delete_from_favorite)
+                if (isFavorite){
+                    favoriteButton.setText(R.string.Delete_from_favorite)
+                    favoriteButton.setBackgroundColor(Color.parseColor("#B3FF7777"))
+                }
 
                 if (user.id == myId){
                     editPostButton.setOnClickListener {
@@ -65,9 +69,11 @@ class PostAdapter(val listener: Listener) : RecyclerView.Adapter<PostAdapter.Pos
 
                         if(favoriteButton.text  == itemView.resources.getString(R.string.Add_to_favorite)) {
                             favoriteButton.setText(R.string.Delete_from_favorite)
+                            favoriteButton.setBackgroundColor(Color.parseColor("#B3FF7777"))
                             listener.onClickAddToFavoriteButton(post, true)
                         }else {
                             favoriteButton.setText(R.string.Add_to_favorite)
+                            favoriteButton.setBackgroundColor(Color.parseColor("#B3E1F1B6"))
                             listener.onClickAddToFavoriteButton(post, false)
                         }
 

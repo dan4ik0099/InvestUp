@@ -28,6 +28,7 @@ import com.example.investup.navigationInterface.navigator
 import com.example.investup.publicObject.ApiInstance
 import com.example.investup.retrofit.dataClass.Post
 import com.example.investup.retrofit.dataClass.Tag
+import com.example.investup.retrofit.requestModel.PostEditRequest
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import kotlinx.coroutines.*
@@ -69,26 +70,6 @@ class EditPostFragment : Fragment(), TagAdapter.Listener {
         coroutine = CoroutineScope(Dispatchers.IO)
         player = ExoPlayer.Builder(requireContext()).build()
         binding.apply {
-            addDeleteVideoButton.setText(R.string.Delete_video)
-
-
-            launcher =
-                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                    if (it.resultCode == Activity.RESULT_OK) {
-                        val res: Intent? = it.data
-                        uri = res?.data!!
-                        player = ExoPlayer.Builder(requireContext()).build()
-                        videosView.visibility = View.VISIBLE
-                        videosView.player = player
-                        val mediaItem = MediaItem.fromUri(uri.toString());
-
-                        player.setMediaItem(mediaItem)
-                        player.prepare()
-                        player.play()
-                        addDeleteVideoButton.setText(R.string.Delete_video)
-                    }
-                }
-
 
 
             coroutine.launch {
@@ -129,40 +110,46 @@ class EditPostFragment : Fragment(), TagAdapter.Listener {
                     }
                 }
             }
-            addDeleteVideoButton.setOnClickListener {
-                val REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 1
 
-                if (ContextCompat.checkSelfPermission(
-                        requireActivity(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ) != PackageManager.PERMISSION_GRANTED
+            saveChangeButton.setOnClickListener {
+                if (
+                    titleInput.text.isNotEmpty()
+                    && shortDescriptionInput.text.isNotEmpty()
+                    && fullDescriptionInput.text.isNotEmpty()
+                    && activeTags.isNotEmpty()
+                    && activeTags.size < 4
+
                 ) {
-                    ActivityCompat.requestPermissions(
-                        requireActivity(),
-                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                        REQUEST_CODE_WRITE_EXTERNAL_STORAGE
-                    )
-                } else {
-                    havePermission = true
+                    val idTagList = ArrayList<String>()
+                    activeTags.mapTo(idTagList)
+                    {
+                        it.id
+                    }
 
-                }
-                if (havePermission) {
-                    if (uri == null) {
-                        addDeleteVideoButton.setText(R.string.Delete_video)
-                        val i = Intent(Intent.ACTION_GET_CONTENT)
-                        i.type = "video/*"
-                        launcher!!.launch(i)
+                    coroutine.launch {
 
-                    } else {
-                        addDeleteVideoButton.setText(R.string.Add_video)
-                        uri = null
-                        player.release()
-                        videosView.visibility = View.GONE
-
+                        val response = ApiInstance.getApi().changePostById(
+                            post.id, PostEditRequest(
+                                titleInput.text.toString(),
+                                shortDescriptionInput.text.toString(),
+                                fullDescriptionInput.text.toString(),
+                                idTagList
+                            ),
+                            dataModelToken.accessToken.value!!
+                        )
+                        withContext(Dispatchers.Main){
+                            if (response.code() == 200){
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.Post_success_edit),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                navigator().navBack()
+                            }
+                        }
                     }
                 }
             }
-
 
 
 

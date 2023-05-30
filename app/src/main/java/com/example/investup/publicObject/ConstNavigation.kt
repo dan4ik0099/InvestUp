@@ -19,4 +19,5 @@ object ConstNavigation {
     const val POST_DETAILS = 9
     const val EDIT_POST = 10
     const val USER_PROFILE = 11
+    const val CHAT_USER = 12
 }

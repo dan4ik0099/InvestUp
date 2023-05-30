@@ -16,7 +16,7 @@
     <string name="Change_password">Изменить пароль</string>
     <string name="Change_data">Изменить данные</string>
     <string name="Hint_title">Название</string>
-    <string name="Hint_short_description">Короткое описание</string>
+    <string name="Hint_short_description">Краткое описание</string>
     <string name="Hint_full_description">Описание идеи</string>
     <string name="Delete_video">Удалить видео</string>
     <string name="Add_video">Загрузить видео</string>
@@ -37,13 +37,13 @@
     <string name="Contact">Связаться</string>
 
     <string name="Report">Жалоба</string>
-
+    <string name="Are_you_sure_about_delete_message">Вы уверенны, что хотите удалить данное сообщение?</string>
     <string name="Add">Добавить</string>
     <string name="Your_post">Ваши посты</string>
     <string name="Exit_from_acc">Выйти</string>
     <string name="Creating_post">Создание поста</string>
     <string name="Home">Главная</string>
-
+    <string name="Dialog">Диалог</string>
     <string name="Comment_upload_success">Комментарий опубликован</string>
     <string name="Post_upload_success">Пост успешно создан</string>
     <string name="Chat">Чат</string>
@@ -82,4 +82,12 @@
     <string name="Cancel">Отмена</string>
     <string name="Are_you_sure_about_delete_comment">Вы уверенны, что хотите удалить комментарий?</string>
     <string name="Are_you_sure_about_exit">Вы уверенны, что хотите выйти из аккаунта?</string>
+    <string name="Post_success_edit">Пост успешно изменен</string>
+    <string name="Send">Отправить</string>
+    <string name="Write_message_to_user">Напишите сообщение пользователю</string>
+    <string name="Message_">Сообщение...</string>
+    <string name="Write_about_report_user">Опишите подробно причину жалобы на данного пользователя</string>
+    <string name="Write_about_report_post">Опишите подробно причину жалобы на данный пост</string>
+    <string name="Description_report">Описание жалобы...</string>
+    <string name="Report_success">Жалоба успешно отправлена</string>
 </resources>

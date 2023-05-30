@@ -16,20 +16,28 @@ import androidx.fragment.app.Fragment
 import com.example.investup.dataModels.DataModelSearch
 
 import com.example.investup.dataModels.DataModelToken
+import com.example.investup.dataModels.DataModelUser
 import com.example.investup.databinding.ActivityMainBinding
 import com.example.investup.fragments.*
 import com.example.investup.navigationInterface.Navigator
 import com.example.investup.publicObject.ApiInstance
 import com.example.investup.publicObject.ConstNavigation
+import com.example.investup.publicObject.SocketEvents
+import com.example.investup.publicObject.SocketSingleton
+
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+
 import kotlinx.coroutines.launch
+
 
 
 class MainActivity : AppCompatActivity(), Navigator {
     var pref: SharedPreferences? = null
     private val dataModelToken: DataModelToken by viewModels()
     private val dataModelSearch: DataModelSearch by viewModels()
+    private val dataModelUser: DataModelUser by viewModels()
     private lateinit var pLauncher: ActivityResultLauncher<Array<String>>
 
 
@@ -40,8 +48,10 @@ class MainActivity : AppCompatActivity(), Navigator {
         setContentView(binding.root)
 
         init()
+
         registerPermissionListener()
         checkCameraPermission()
+
     }
 
 
@@ -80,14 +90,15 @@ class MainActivity : AppCompatActivity(), Navigator {
                 .requestInfoMe(dataModelToken.accessToken.value!!)
 
             runOnUiThread {
-                if (response.message() == "OK") {
+                if (response.code() == 200) {
                     val body = response.body()
                     body?.let {
                         dataModelToken.myId.value = it.id
                         navToHome()
                         navOn()
+                        socketInit()
                     }
-                } else if (response.message() != "OK") {
+                } else {
 
                     openFragment(
                         LoginFragment.newInstance(),
@@ -164,6 +175,16 @@ class MainActivity : AppCompatActivity(), Navigator {
 
     }
 
+
+    fun socketInit(){
+
+        SocketSingleton.connectSocket(dataModelToken.accessToken.value!!)
+        SocketSingleton.sendConnection(dataModelToken.accessToken.value!!.replace("Bearer " ,""), SocketEvents.CONNECTION.s)
+
+
+
+    }
+
     override fun goToRegister() {
 
         openFragment(
@@ -193,6 +214,18 @@ class MainActivity : AppCompatActivity(), Navigator {
     override fun navOn() {
         binding.bottomNavigationView.visibility = View.VISIBLE
 
+    }
+
+    override fun navToDialogUser() {
+        openFragment(
+            DialogUserFragment.newInstance(),
+            binding.mainPlaceholder.id,
+            ConstNavigation.CHAT_USER,
+            R.string.Dialog,
+            true,
+            true,
+        )
+        binding.bottomNavigationView.visibility = View.GONE
     }
 
 
@@ -228,6 +261,10 @@ class MainActivity : AppCompatActivity(), Navigator {
             true,
             true,
         )
+    }
+
+    override fun navBack() {
+        onBackPressed()
     }
 
     override fun navAfterLoginRegister() {
@@ -298,7 +335,10 @@ class MainActivity : AppCompatActivity(), Navigator {
 
     }
 
+
+
     override fun onBackPressed() {
+        binding.bottomNavigationView.visibility = View.VISIBLE
         if (!ConstNavigation.titleStack.empty()) {
             supportActionBar?.title = ConstNavigation.titleStack.pop()
 
@@ -333,6 +373,9 @@ class MainActivity : AppCompatActivity(), Navigator {
             }
             ConstNavigation.FAVORITE -> {
 
+            }
+            ConstNavigation.CHAT_USER -> {
+                backTo()
             }
 
 

@@ -20,7 +20,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import com.example.investup.R
-import com.example.investup.UriHelper
+import com.example.investup.other.UriHelper
 import com.example.investup.adapter.TagAdapter
 import com.example.investup.dataModels.DataModelAddPost
 import com.example.investup.dataModels.DataModelToken
@@ -103,6 +103,7 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
                 player = ExoPlayer.Builder(requireContext()).build()
                 println("videos " + dataModelAddPost.video.value.toString())
                 videosView.visibility = View.VISIBLE
+                cardVideos.visibility = View.VISIBLE
                 videosView.player = player
                 val mediaItem = MediaItem.fromUri(dataModelAddPost.video.value.toString());
                 player.setMediaItem(mediaItem)
@@ -110,6 +111,7 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
                 player.play()
                 addDeleteVideoButton.setText(R.string.Delete_video)
             } else {
+                cardVideos.visibility = View.GONE
                 videosView.visibility = View.GONE
                 addDeleteVideoButton.setText(R.string.Add_video)
             }
@@ -120,6 +122,7 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
                     dataModelAddPost.video.value = res?.data
                     player = ExoPlayer.Builder(requireContext()).build()
                     videosView.visibility = View.VISIBLE
+                    cardVideos.visibility = View.VISIBLE
                     videosView.player = player
                     val mediaItem = MediaItem.fromUri(res?.data.toString());
 
@@ -206,6 +209,7 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
                         dataModelAddPost.video.value = null
                         player.release()
                         videosView.visibility = View.GONE
+                        cardVideos.visibility = View.GONE
 
                     }
                 }
@@ -213,10 +217,12 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
 
             uploadPostButton.setOnClickListener {
                 if (dataModelAddPost.video.value != null
-                    && dataModelAddPost.title.value.toString().isNotEmpty()
-                    && dataModelAddPost.shortDescription.value.toString().isNotEmpty()
-                    && dataModelAddPost.fullDescription.value.toString().isNotEmpty()
+                    && dataModelAddPost.title.value.toString().length>1
+                    && dataModelAddPost.shortDescription.value.toString().length>5
+                    && dataModelAddPost.fullDescription.value.toString().length>5
                     && activeTags.isNotEmpty()
+                    && activeTags.size<4
+
                 ) {
 
 
@@ -281,6 +287,9 @@ class AddPostFragment : Fragment(), TagAdapter.Listener {
                         }
 
                     }
+                }
+                else{
+                    Toast.makeText(context, "Требуется больше данных для создания поста, количество тегов от 1 до 3", Toast.LENGTH_SHORT).show()
                 }
 
             }

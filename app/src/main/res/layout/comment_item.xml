@@ -10,9 +10,9 @@
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/card_background"
+        app:cardBackgroundColor="#FFFFFF"
         app:cardCornerRadius="20dp"
-        app:cardElevation="4dp"
+        app:cardElevation="2dp"
         app:cardMaxElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +38,7 @@
                 android:id="@+id/profileButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/card_background"
+                app:cardBackgroundColor="#00F2F2F2"
                 app:cardElevation="0dp"
                 app:cardMaxElevation="0dp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -87,12 +87,14 @@
 
             <TextView
                 android:id="@+id/textLabel"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:maxLines="8"
                 android:textColor="@color/black"
                 android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/deleteCommentButton"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/profileButton" />
         </androidx.constraintlayout.widget.ConstraintLayout>

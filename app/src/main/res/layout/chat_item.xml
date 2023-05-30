@@ -3,18 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:clipToPadding="false"
-    android:padding="5dp">
+    android:padding="5dp"
+    android:translationZ="20dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+
         android:clipToPadding="false"
-        app:cardBackgroundColor="@color/card_background"
+        android:outlineAmbientShadowColor="#00000040"
+        app:cardBackgroundColor="#B3E1F1B6"
+
+
         app:cardCornerRadius="20dp"
-        app:cardElevation="4dp"
-        app:cardMaxElevation="4dp"
+        app:cardElevation="0dp"
+        app:cardMaxElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,13 +28,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
+
             android:padding="10dp">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView5"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                app:cardCornerRadius="200dp">
+                app:cardCornerRadius="200dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:id="@+id/avatarImageView"
@@ -67,8 +75,9 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="asfasfgihasghuisdguihsdfhgisdighasighisdighsdhgishigshgisdh"
+                android:textColor="#000000"
                 app:layout_constraintBottom_toBottomOf="@+id/cardView5"
-                app:layout_constraintEnd_toEndOf="@+id/dateLabel"
+                app:layout_constraintEnd_toStartOf="@+id/dateLabel"
                 app:layout_constraintStart_toStartOf="@+id/space2"
                 app:layout_constraintTop_toBottomOf="@+id/space2" />
 
@@ -76,11 +85,41 @@
                 android:id="@+id/dateLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="4dp"
+                android:fontFamily="sans-serif"
                 android:text="TextView"
                 app:layout_constraintBottom_toBottomOf="@+id/nameSurnameLabel"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/nameSurnameLabel" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardMessagesCount"
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:maxWidth="40dp"
+                android:maxHeight="40dp"
+                android:minWidth="20dp"
+                android:minHeight="20dp"
+                android:visibility="visible"
+                app:cardBackgroundColor="@color/theme"
+                app:cardCornerRadius="20dp"
+                app:layout_constraintBottom_toBottomOf="@+id/lastMessageLabel"
+                app:layout_constraintEnd_toEndOf="@+id/dateLabel"
+                app:layout_constraintTop_toTopOf="@+id/lastMessageLabel">
+
+                <TextView
+                    android:id="@+id/unreadMessageCountLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:padding="3dp"
+                    android:text="1"
+                    android:textColor="#FFFFFF"
+                    android:visibility="visible" />
+            </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>

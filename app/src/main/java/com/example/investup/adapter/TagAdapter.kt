@@ -1,5 +1,6 @@
 package com.example.investup.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,14 +16,15 @@ class TagAdapter(val listener: Listener) : RecyclerView.Adapter<TagAdapter.TagHo
     class TagHolder(item: View) : RecyclerView.ViewHolder(item) {
         val binding = TagItemBinding.bind(item)
         fun bind(tag: Tag, listener: Listener) = with(binding) {
-            if (tag.isActive) isOnImage.visibility = View.VISIBLE
-            else isOnImage.visibility = View.GONE
+            if (tag.isActive) cardView.setCardBackgroundColor(Color.parseColor("#B3A1D981"))
+            else cardView.setCardBackgroundColor(Color.parseColor("#B3E1F1B6"))
             itemView.setOnClickListener {
                 if (tag.isActive) {
-                    isOnImage.visibility = View.GONE
+                    cardView.setCardBackgroundColor(Color.parseColor("#B3E1F1B6"))
+
                     tag.isActive = false
                 } else {
-                    isOnImage.visibility = View.VISIBLE
+                    cardView.setCardBackgroundColor(Color.parseColor("#B3A1D981"))
                     tag.isActive = true
                 }
                 listener.onClickTag(tag)

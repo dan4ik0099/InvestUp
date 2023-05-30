@@ -24,6 +24,7 @@ import com.example.investup.dataModels.DataModelToken
 import com.example.investup.dataModels.DataModelUser
 import com.example.investup.databinding.FragmentProfileBinding
 import com.example.investup.navigationInterface.navigator
+import com.example.investup.publicObject.SocketSingleton
 import com.example.investup.publicObject.SortingObject
 import com.example.investup.retrofit.dataClass.Post
 import com.example.investup.retrofit.dataClass.Tag
@@ -70,7 +71,7 @@ class ProfileFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
 
     override fun onResume() {
         super.onResume()
-        binding.tipsRecyclerView.removeAllViews()
+
         binding.myPostsRecyclerView.removeAllViews()
 
 
@@ -240,8 +241,12 @@ class ProfileFragment : Fragment(), PostAdapter.Listener, TagAdapter.Listener {
                 alertDialogBuilder.setMessage(getString(R.string.Are_you_sure_about_exit))
                 alertDialogBuilder.setPositiveButton(getString(R.string.Yes)) { dialog, which ->
                     coroutine.launch {
+
                         val response = ApiInstance.getApi().session(dataModelToken.accessToken.value!!)
+                        SocketSingleton.closeConnection()
+
                     }
+
                     dataModelToken.accessToken.value = "-1"
                     navigator().goToLogin()
                 }

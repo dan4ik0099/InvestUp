@@ -3,6 +3,8 @@ package com.example.investup.fragments
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
+import android.content.DialogInterface
+import android.graphics.Color
 import android.graphics.text.LineBreaker.JUSTIFICATION_MODE_INTER_WORD
 import android.net.Uri
 import android.os.Build
@@ -12,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -28,7 +31,10 @@ import com.example.investup.databinding.FragmentPostDetailsBinding
 import com.example.investup.navigationInterface.navigator
 import com.example.investup.publicObject.ApiInstance
 import com.example.investup.retrofit.dataClass.Comment
+import com.example.investup.retrofit.requestModel.DialogCreateRequest
+import com.example.investup.retrofit.requestModel.PostReportRequest
 import com.example.investup.retrofit.requestModel.UploadCommentRequest
+import com.example.investup.retrofit.requestModel.UserReportRequest
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.squareup.picasso.Picasso
@@ -88,14 +94,13 @@ class PostDetailsFragment : Fragment(), CommentAdapter.Listener {
                     body?.let {
 
                         withContext(Dispatchers.Main) {
-
+                            dataModeLUser.id.value = it.user.id
 
                             profileButton.setOnClickListener{
                                 if (dataModelToken.myId.value == body.user.id)
                                     navigator().navToProfile()
 
                                 else {
-                                    dataModeLUser.id.value = body.user.id
                                     navigator().navToUserProfile()
                                 }
                             }
@@ -120,9 +125,9 @@ class PostDetailsFragment : Fragment(), CommentAdapter.Listener {
                             viewCountLabel.text = it.views.toString()
                             commentCountLabel.text = it.commentsCount.toString()
                             favoriteCountLabel.text = it.favoriteCount.toString()
-                            println(it.id + " +=+ " + dataModelToken.myId.value)
-                            println(it.isFavorite)
+
                             if (it.user.id == dataModelToken.myId.value) {
+                                reportButton.visibility = View.GONE
                                 favoriteButton.visibility = View.GONE
                                 contactButton.visibility = View.GONE
                             } else if (it.isFavorite) {
@@ -148,6 +153,89 @@ class PostDetailsFragment : Fragment(), CommentAdapter.Listener {
                             commentsRecyclerView.adapter = commentAdapter
                             commentAdapter.addComments(it.comments, dataModelToken.myId.value!!)
                         }
+                    }
+                    reportButton.setOnClickListener{
+                        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+                        alertDialogBuilder.setTitle(getString(R.string.Write_about_report_user))
+
+
+                        val input = EditText(requireContext())
+                        input.hint = getString(R.string.Description_report)
+                        input.setText("")
+                        input.setTextColor(Color.BLACK)
+                        alertDialogBuilder.setView(input)
+
+
+                        alertDialogBuilder.setPositiveButton(getString(R.string.Send)) { dialog: DialogInterface, which: Int ->
+                            if (input.text.isNotEmpty()) {
+                                coroutine.launch {
+                                    val response = ApiInstance.getApi().createReportPost(
+                                        dataModelToken.accessToken.value!!,
+                                        PostReportRequest(input.text.toString(), dataModeLPost.id.value!!)
+                                    )
+                                    withContext(Dispatchers.Main) {
+                                        if (response.code() == 200) {
+                                            Toast.makeText(context, getString(R.string.Report_success), Toast.LENGTH_SHORT).show()
+
+                                        }
+                                    }
+                                }
+                            }
+
+
+                        }
+
+                        alertDialogBuilder.setNegativeButton(getString(R.string.Cancel)) { dialog: DialogInterface, which: Int ->
+                            dialog.cancel()
+                        }
+
+
+                        val alertDialog = alertDialogBuilder.create()
+                        alertDialog.show()
+                    }
+
+                    contactButton.setOnClickListener{
+
+                        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+                        alertDialogBuilder.setTitle(getString(R.string.Write_message_to_user))
+
+
+                        val input = EditText(requireContext())
+                        input.hint = getString(R.string.Message_)
+                        input.setText("")
+                        input.setTextColor(Color.BLACK)
+                        alertDialogBuilder.setView(input)
+
+
+                        alertDialogBuilder.setPositiveButton(getString(R.string.Send)) { dialog: DialogInterface, which: Int ->
+                            if (input.text.isNotEmpty()) {
+                                coroutine.launch {
+                                    val response = ApiInstance.getApi().createDialog(
+                                        dataModelToken.accessToken.value!!,
+                                        DialogCreateRequest(input.text.toString(), dataModeLUser.id.value!!)
+                                    )
+                                    withContext(Dispatchers.Main) {
+                                        if (response.code() == 200) {
+                                            dataModeLUser.dialogId.value = response.body()!!.id
+                                            navigator().navToDialogUser()
+
+                                        }
+                                    }
+                                }
+                            }
+
+
+                        }
+
+                        alertDialogBuilder.setNegativeButton(getString(R.string.Cancel)) { dialog: DialogInterface, which: Int ->
+                            dialog.cancel()
+                        }
+
+
+                        val alertDialog = alertDialogBuilder.create()
+                        alertDialog.show()
+
+
                     }
 
 

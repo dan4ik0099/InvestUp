@@ -1,5 +1,6 @@
 package com.example.investup.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ class TagInPostAdapter() : RecyclerView.Adapter<TagInPostAdapter.TagInPostHolder
         val binding = TagItemBinding.bind(item)
         fun bind(tag: Tag) = with(binding) {
             tagName.text = tag.value
+            cardView.setCardBackgroundColor(Color.parseColor("#B3A1D981"))
         }
 
     }

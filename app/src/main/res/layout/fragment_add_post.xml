@@ -6,14 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".fragments.AddPostFragment">
 
+    <ImageView
+        android:id="@+id/imageView14"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/home_bg"
+        tools:src="@tools:sample/avatars" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/card_background"
         tools:ignore="UselessParent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,10 +36,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:autofillHints=""
+                    android:background="@drawable/input_shape"
                     android:ems="10"
                     android:hint="@string/Hint_title"
                     android:inputType="textPersonName"
                     android:minHeight="48dp"
+                    android:padding="5dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -41,6 +52,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="28dp"
                     android:autofillHints=""
+                    android:background="@drawable/input_shape"
                     android:ems="10"
                     android:gravity="start|top"
                     android:hint="@string/Hint_short_description"
@@ -49,6 +61,7 @@
                     android:maxLines="5"
                     android:minHeight="48dp"
                     android:minLines="1"
+                    android:padding="5dp"
                     app:layout_constraintEnd_toEndOf="@+id/titleInput"
                     app:layout_constraintStart_toStartOf="@+id/titleInput"
                     app:layout_constraintTop_toBottomOf="@+id/titleInput" />
@@ -59,6 +72,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="28dp"
                     android:autofillHints=""
+                    android:background="@drawable/input_shape"
                     android:ems="10"
                     android:gravity="start|top"
                     android:hint="@string/Hint_full_description"
@@ -66,6 +80,7 @@
                     android:maxLines="15"
                     android:minHeight="48dp"
                     android:minLines="1"
+                    android:padding="5dp"
                     app:layout_constraintEnd_toEndOf="@+id/shortDescriptionInput"
                     app:layout_constraintHeight_max="wrap"
                     app:layout_constraintHeight_min="wrap"
@@ -78,17 +93,19 @@
                     android:id="@+id/uploadPostButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="@color/buttonColorLightGreen"
                     android:elevation="8dp"
                     android:fontFamily="sans-serif-medium"
                     android:letterSpacing="0.03"
                     android:text="@string/Post_upload"
                     android:textAllCaps="false"
+                    android:textColor="@color/black"
                     android:textSize="16sp"
                     app:cornerRadius="20dp"
                     app:layout_constraintEnd_toEndOf="@+id/add_deleteVideoButton"
                     app:layout_constraintStart_toStartOf="@+id/add_deleteVideoButton"
-                    app:layout_constraintTop_toBottomOf="@+id/videosView" />
+                    app:layout_constraintTop_toBottomOf="@+id/cardVideos" />
 
                 <TextView
                     android:id="@+id/add_deleteVideoButton"
@@ -104,19 +121,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tagsRcView" />
 
-                <com.google.android.exoplayer2.ui.PlayerView
-                    android:id="@+id/videosView"
-                    android:layout_width="0dp"
-                    android:layout_height="300dp"
-
-                    android:layout_marginTop="16dp"
-                    android:background="#000000"
-                    android:backgroundTint="#000000"
-                    app:layout_constraintEnd_toEndOf="@+id/tagsRcView"
-                    app:layout_constraintStart_toStartOf="@+id/tagsRcView"
-                    app:layout_constraintTop_toBottomOf="@+id/add_deleteVideoButton"
-                    app:resize_mode="fit" />
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/tagsRcView"
                     android:layout_width="0dp"
@@ -125,6 +129,26 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/fullDescriptionInput" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardVideos"
+                    android:layout_width="0dp"
+                    android:layout_height="300dp"
+                    android:layout_marginTop="8dp"
+                    app:cardCornerRadius="15dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/add_deleteVideoButton">
+
+                    <com.google.android.exoplayer2.ui.PlayerView
+                        android:id="@+id/videosView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+
+                        android:background="#000000"
+                        android:backgroundTint="#000000"
+                        app:resize_mode="fit" />
+                </androidx.cardview.widget.CardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

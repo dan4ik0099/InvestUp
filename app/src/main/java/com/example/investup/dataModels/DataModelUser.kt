@@ -13,4 +13,7 @@ class DataModelUser: ViewModel() {
     val lastName: MutableLiveData<String> by lazy{
         MutableLiveData<String>()
     }
+    val dialogId: MutableLiveData<String> by lazy{
+        MutableLiveData<String>()
+    }
 }
